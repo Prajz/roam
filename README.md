@@ -14,7 +14,13 @@ bun run dev
 
 Open the local URL printed by Vite. Start with a blank week, change **Trip settings**, then add destinations and activities. Import a personal JSON file from **Trip notes → Import JSON**.
 
-## Upload to your own private site
+## GitHub Pages
+
+The public app is hosted at https://prajz.github.io/roam/ . Every push to `main` runs `.github/workflows/pages.yml`, checks JSON compatibility, builds with Vite and publishes `dist/` to GitHub Pages. You can also run the workflow manually in the repository's Actions tab.
+
+The site and repository are public. Changes and JSON files you import stay in your browser; they are not uploaded to GitHub. Personal itineraries in `local-plans/` are ignored by Git and excluded from builds. There is no bundled itinerary or sample-loading button. Share your JSON files directly with your friend and import them through Trip notes.
+
+## Upload to another static host
 
 ```sh
 bun run build
@@ -28,7 +34,7 @@ To check the production build locally:
 bun run preview
 ```
 
-The website's access protection comes from your existing private host. Trip data stays in the browser; uploading the app does not upload your saved trip. Personal JSON files belong in `local-plans/`, which Git ignores and Vite does not copy into the production build. Import them manually in the app. Keep personal files out of `public/`, which Vite copies into `dist/`.
+For private hosting, configure access protection on your host. Trip data stays in the browser; uploading the app does not upload your saved trip. Personal JSON files belong in `local-plans/`, which Git ignores and Vite does not copy into the production build. Import them manually in the app. Keep personal files out of `public/`, which Vite copies into `dist/`.
 
 Upload the whole new `dist/` each time, including `sw.js`. On HTTPS the built app caches its files for offline use after the first visit. Refresh after an update to receive the latest app. The new worker also retires the old vanilla app's cache. The development server does not install an offline worker.
 
