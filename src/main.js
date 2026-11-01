@@ -1,5 +1,6 @@
 import './style.css'
 import { createPlanner } from './planner.js'
+import { createOnboarding } from './onboarding.js'
 import { shell, dayDetails } from './views.js'
 import { editorContent } from './editor.js'
 import { setupDrag } from './drag.js'
@@ -17,7 +18,12 @@ const planner=document.getElementById('planner')
 const dayDialog=document.querySelector('dialog.day-drawer')
 const editorDialog=document.querySelector('dialog.modal')
 const fileInput=document.getElementById('import-input')
-const state=createPlanner(type=>type==='render'?render():updateStatus())
+const state=createPlanner(type=>{
+  if (type==='setup') { onboarding.reset();render() }
+  else if (type==='render') render()
+  else updateStatus()
+})
+const onboarding=createOnboarding(state,render)
 let renderedEditor=null
 function updateStatus() {
   document.getElementById('toast-status').innerHTML=state.toastMessage?`<div class="toast">${esc(state.toastMessage)}</div>`:''
@@ -39,7 +45,7 @@ function syncDialogs() {
 }
 function render() {
   document.title=state.plan.name+' · Roam'
-  planner.innerHTML=shell(state)
+  planner.innerHTML=state.onboarding?onboarding.content():shell(state)
   syncDialogs(); updateStatus()
 }
 function closeDay() { state.drawerDate=null; dayDialog.close(); render() }
@@ -56,6 +62,7 @@ document.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]')
   if (!target) return
   const {action,date,id,view}=target.dataset
+  if (onboarding.action(action)) return
   switch (action) {
     case 'view': state.setView(view);break
     case 'open-day': state.openDay(date);break
@@ -81,12 +88,14 @@ document.addEventListener('click',event=>{
 fileInput.addEventListener('change',event=>state.importFile(event))
 document.addEventListener('input',event=>{
   const target=event.target
+  if (state.onboarding) { onboarding.change(target);return }
   if (target.dataset.save) { state.plan[target.dataset.save]=target.value; state.save() }
   else if (target.dataset.dayfield) { state.getDay(state.drawerDate)[target.dataset.dayfield]=target.value; state.save() }
   else if (target.name==='from' && validDate(target.value)) editorDialog.querySelector('[name=to]').min=addDays(target.value,1)
   else if (target.name==='startDate') editorDialog.querySelector('[name=endDate]').min=target.value
 })
 document.addEventListener('submit',event=>{
+  if (event.target.id==='setup-form') { event.preventDefault();onboarding.submit(event.target);return }
   if (event.target.id!=='editor-form') return
   event.preventDefault()
   const draft={...state.editor.record,...Object.fromEntries(new FormData(event.target))}

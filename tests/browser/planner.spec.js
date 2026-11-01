@@ -138,8 +138,7 @@ test('built app opens offline and retains the trip', async ({page,context}) => {
 })
 test('static build works from a private-site subfolder', async ({page}) => {
   await page.goto('/roam/')
-  await expect(page.getByRole('heading',{name:'My next adventure',exact:true})).toBeVisible()
-  await page.getByRole('button',{name:'Trip notes',exact:true}).click()
+  await expect(page.getByRole('heading',{name:'Let’s get your trip started.',exact:true})).toBeVisible()
   await importSample(page)
   await expect(page.getByRole('heading',{name:sample.name,exact:true})).toBeVisible()
   await fits(page)

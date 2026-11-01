@@ -1,8 +1,8 @@
 # Working on Roam
 
-Read README.md, src/main.js, src/views.js, src/editor.js, src/planner.js, src/plan.js, src/style.css and tests/fixtures/example-trip.json before changing the project.
+Read README.md, src/main.js, src/views.js, src/editor.js, src/planner.js, src/onboarding.js, src/starter.js, src/plan.js, src/style.css and tests/fixtures/example-trip.json before changing the project.
 
-Roam is a small personal Vite + plain JavaScript trip planner for two friends, hosted as static files on the owner's private site. Keep it simple. No backend, login, database, payments, tracking or API keys are needed.
+Roam is a small personal Vite + plain JavaScript trip planner for two friends, hosted as a static GitHub Pages site. Keep it simple. No backend, login, database, payments, tracking or API keys are needed.
 
 Preserve the version 1 JSON schema and the `roam-personal-trip-v1` localStorage key. JSON snapshots are the transfer format, with explicit replacement confirmation; do not imply live sync. Keep the default trip blank. Personal plans belong only in the ignored local-plans/ folder; never commit or bundle them. Use synthetic fixtures for tests. Avoid hiding or losing saved days when dates change.
 

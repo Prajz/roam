@@ -12,7 +12,7 @@ bun install
 bun run dev
 ```
 
-Open the local URL printed by Vite. Start with a blank week, change **Trip settings**, then add destinations and activities. Import a personal JSON file from **Trip notes → Import JSON**.
+Open the local URL printed by Vite. On your first visit, import an existing JSON plan or use the short setup to enter dates, places, interests and optional flights. Roam creates an editable starter with suggested stays, activity ideas and a checklist. You can skip setup for a blank plan. Existing saved trips open directly. **Trip notes → Start a fresh trip** opens setup again and keeps your current plan until you finish. Import a personal JSON file from **Trip notes → Import JSON**.
 
 ## GitHub Pages
 
@@ -48,6 +48,10 @@ Upload the whole new `dist/` each time, including `sw.js`. On HTTPS the built ap
 These are separate copies, not live collaboration. Import replaces the current plan after confirmation, so export a backup before switching trips. Your existing version 1 JSON files and browser storage key are preserved. Browser data is tied to the site's address and browser; clearing site data can erase it.
 
 ## Included
+
+- First-visit JSON import or guided setup for dates, places, pace, interests and optional flights
+- Starter stays split across available nights, flexible activity ideas and a booking checklist
+- Separate departure and arrival dates for overnight flights; all times stay local to the airport
 
 - Calendar and day-by-day itinerary
 - Destination stays, check-in/out, accommodation, neighbourhoods and ideas
