@@ -98,6 +98,7 @@ document.addEventListener('input',event=>{
   else if (target.name==='startDate') editorDialog.querySelector('[name=endDate]').min=target.value
 })
 document.addEventListener('submit',event=>{
+  if (event.target.id==='setup-json-form') { event.preventDefault();onboarding.submitJSON(event.target);return }
   if (event.target.id==='setup-form') { event.preventDefault();onboarding.submit(event.target);return }
   if (event.target.id!=='editor-form') return
   event.preventDefault()

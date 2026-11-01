@@ -1,13 +1,14 @@
 import { esc, icon, button } from './html.js'
 import { blankPlan, validDate } from './plan.js'
+import { parsePlanJSON } from './plan-json.js'
 import { validateBasics, validatePlaces, createStarter } from './starter.js'
 
 export function createOnboarding(state, render) {
-  let step=0, error='', draft
+  let step=0, error='', jsonDraft='', draft
   function reset() {
     const blank=blankPlan()
     draft={ name:'', startDate:blank.startDate, endDate:blank.endDate, places:'', pace:'balanced', interests:['sights','food'], notes:'', flights:[] }
-    step=0; error=''
+    step=0; error=''; jsonDraft=''
   }
   reset()
   function input(name,label,value='',type='text',extra='') {
@@ -25,8 +26,15 @@ export function createOnboarding(state, render) {
     </fieldset></details>`
   }
   function content() {
-    const welcome=`<div class="setup-intro"><div class="eyebrow">A LITTLE PLANNING. A LOT TO LOOK FORWARD TO.</div><h1 id="setup-title">Let’s get your trip started.</h1><p>Already have a Roam JSON file, or shall we put together a first draft?</p></div>
-      <div class="setup-choices"><button class="setup-choice" data-action="import">${icon('upload')}<strong>I have a JSON plan</strong><span>Pick a shared plan or a backup from your device.</span></button><button class="setup-choice" data-action="setup-start">${icon('compass')}<strong>Plan a new trip</strong><span>A few questions about dates, places and flights.</span></button></div>
+    const welcome=`<div class="setup-intro"><div class="eyebrow">A LITTLE PLANNING. A LOT TO LOOK FORWARD TO.</div><h1 id="setup-title">Let’s get your trip started.</h1><p>Already have a Roam JSON plan, or shall we put together a first draft?</p></div>
+      <div class="setup-choices"><button class="setup-choice" data-action="import">${icon('upload')}<strong>I have a JSON plan</strong><span>Upload a shared plan or a backup from your device.</span></button><button class="setup-choice" data-action="setup-start">${icon('compass')}<strong>Plan a new trip</strong><span>A few questions about dates, places and flights.</span></button></div>
+      <details class="setup-json"><summary>Paste or type JSON instead</summary><form id="setup-json-form">
+        <p id="setup-json-help" class="tiny-help">Paste a complete Roam plan, or edit the JSON here before loading it.</p>
+        <label for="setup-json-source" class="setup-json-label">Your trip JSON</label>
+        <textarea id="setup-json-source" name="json" class="json-source" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" wrap="off" aria-describedby="setup-json-help setup-json-validation" aria-invalid="${Boolean(jsonDraft.trim()) && !jsonFeedback().valid}" placeholder='{"schemaVersion": 1, ...}'>${esc(jsonDraft)}</textarea>
+        <p id="setup-json-validation" class="json-validation ${jsonDraft.trim() && !jsonFeedback().valid?'json-invalid':''}" role="status" aria-live="polite">${esc(jsonFeedback().message)}</p>
+        <div class="setup-json-actions"><button id="setup-json-load" type="submit" class="btn primary" ${jsonFeedback().valid?'':'disabled'}>Load this plan ${icon('chevron')}</button></div>
+      </form></details>
       <p class="setup-local">${icon('note')} Your plan saves in this browser. Share a JSON file when you’re ready.</p>`
     const headings=['','First, the essentials.','Where are you heading?','Any flights to add?']
     const descriptions=['','Include your travel days. You can change everything later.','List your stops in the order you want to visit them. We’ll split the nights evenly to get you started.','Add the flights you know, or leave this blank and add them later. All times are local to each airport.']
@@ -40,6 +48,26 @@ export function createOnboarding(state, render) {
     return `<main id="main" class="setup-shell" aria-labelledby="setup-title"><header class="setup-brand"><div class="brand-mark">${icon('compass')}</div><span>roam<span class="brand-dot">.</span></span></header><div id="storage-status"></div>
       ${step===0?welcome:`<div class="setup-intro"><div class="setup-progress" aria-label="Step ${step} of 3"><span>Step ${step} of 3</span><div>${[1,2,3].map(n=>`<i class="${n<=step?'filled':''}"></i>`).join('')}</div></div><h1 id="setup-title" tabindex="-1">${headings[step]}</h1><p>${descriptions[step]}</p></div><form id="setup-form">${fields}<p id="setup-error" class="form-error" role="alert" ${error?'':'hidden'}>${esc(error)}</p><div class="setup-actions">${button('setup-back','Back',null,'btn','type="button"')}<button class="btn primary" type="submit">${step===3?'Create my trip':'Continue'} ${icon(step===3?'check':'chevron')}</button></div></form>`}
       <button class="text-button setup-skip" data-action="setup-skip">${state.hasSavedPlan?'Keep my current trip':'Skip for now'}</button></main>`
+  }
+  function jsonFeedback() {
+    if (!jsonDraft.trim()) return {valid:false,message:'Paste or type your complete JSON plan to get started.'}
+    try {
+      const plan=parsePlanJSON(jsonDraft)
+      return {valid:true,message:`Ready to load “${plan.name}” · ${plan.stays.length} stays.`}
+    } catch (issue) { return {valid:false,message:issue.message} }
+  }
+  function validateJSON() {
+    const result=jsonFeedback(), source=document.getElementById('setup-json-source'), status=document.getElementById('setup-json-validation')
+    if (!source || !status) return
+    source.setAttribute('aria-invalid',String(Boolean(jsonDraft.trim()) && !result.valid))
+    status.textContent=result.message
+    status.classList.toggle('json-invalid',Boolean(jsonDraft.trim()) && !result.valid)
+    document.getElementById('setup-json-load').disabled=!result.valid
+  }
+  function submitJSON(form) {
+    jsonDraft=form.elements.json.value
+    try { state.importJSON(jsonDraft) }
+    catch { validateJSON() }
   }
   function capture(form) {
     const values=new FormData(form)
@@ -73,6 +101,7 @@ export function createOnboarding(state, render) {
     return true
   }
   function change(target) {
+    if (target.id==='setup-json-source') { jsonDraft=target.value;validateJSON();return }
     if (target.name?.endsWith('-enabled')) {
       const fieldset=target.closest('details').querySelector('fieldset');fieldset.disabled=!target.checked
     }
@@ -82,5 +111,5 @@ export function createOnboarding(state, render) {
       arrival.min=target.value
     }
   }
-  return { content, submit, action, change, reset }
+  return { content, submit, submitJSON, action, change, reset }
 }
