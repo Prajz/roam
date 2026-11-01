@@ -1,0 +1,41 @@
+import { test, expect } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
+const sample=JSON.parse(await readFile(new URL('../fixtures/example-trip.json',import.meta.url),'utf8'))
+const manyStops={...sample,stays:Array.from({length:24},(_,index)=>({...sample.stays[0],id:'stop-'+index,name:index===23?'Final destination':'Destination '+String(index+1).padStart(2,'0')}))}
+test('all sidebar destinations can scroll while navigation stays visible',async({page},info)=>{
+  test.skip(info.project.name!=='desktop','Sidebar destinations are replaced by mobile navigation on phones')
+  page.on('dialog',dialog=>dialog.accept())
+  for (const height of [900,600]) {
+    await page.setViewportSize({width:1440,height})
+    await page.goto('/')
+    await page.locator('input[type=file]').setInputFiles({name:'trip.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(manyStops))})
+    const list=page.getByRole('region',{name:'Destinations',exact:true})
+    await expect(list.getByRole('button')).toHaveCount(24)
+    expect(await list.evaluate(node=>node.scrollHeight>node.clientHeight)).toBe(true)
+    const navigation=page.getByRole('button',{name:'Daily itinerary',exact:true})
+    const before=await navigation.boundingBox()
+    await list.hover()
+    await page.mouse.wheel(0,2000)
+    await expect.poll(()=>list.evaluate(node=>node.scrollTop)).toBeGreaterThan(0)
+    await expect(list.getByRole('button',{name:'Final destination',exact:true})).toBeInViewport()
+    expect((await navigation.boundingBox()).y).toBe(before.y)
+    expect(await page.evaluate(()=>window.scrollY)).toBe(0)
+    await list.getByRole('button',{name:'Final destination',exact:true}).click()
+    await expect(page.getByRole('heading',{name:'Edit destination',exact:true})).toBeVisible()
+    await expect(page.getByLabel('City or destination *',{exact:true})).toHaveValue('Final destination')
+    await page.getByRole('button',{name:'Cancel',exact:true}).click()
+    await list.focus()
+    await page.keyboard.press('End')
+    await expect(list.getByRole('button',{name:'Final destination',exact:true})).toBeInViewport()
+    await page.screenshot({path:`test-results/sidebar-scroll-${height}.png`})
+  }
+})
+test('mobile navigation remains usable with many destinations',async({page},info)=>{
+  test.skip(info.project.name!=='mobile','Phone layout only')
+  await page.goto('/')
+  await page.locator('input[type=file]').setInputFiles({name:'trip.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(manyStops))})
+  await expect(page.getByRole('region',{name:'Destinations',exact:true})).not.toBeVisible()
+  await page.getByRole('button',{name:'Destinations & stays',exact:true}).click()
+  await expect(page.getByRole('button',{name:'Edit Final destination',exact:true})).toHaveCount(1)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+})
