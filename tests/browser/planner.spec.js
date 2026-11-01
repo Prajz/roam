@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
-const sample = JSON.parse(await readFile(new URL('../../examples/china-2026.json', import.meta.url), 'utf8'))
+const sample = JSON.parse(await readFile(new URL('../fixtures/example-trip.json', import.meta.url), 'utf8'))
 async function importSample(page, data = sample) {
   await page.locator('input[type=file]').setInputFiles({ name:'trip.json', mimeType:'application/json', buffer:Buffer.from(JSON.stringify(data)) })
   await expect(page.getByRole('heading', { name:data.name, exact:true })).toBeVisible()
@@ -34,7 +34,7 @@ test('trip editing, moving, notes, backup roundtrip, deletion and responsive vie
   await expect(page.getByText('Visit the river', { exact:true })).toHaveClass(/completed/)
   await page.getByRole('button', { name:'Close day details' }).click()
   await page.getByRole('button', { name:'Destinations & stays', exact:true }).click()
-  await page.getByRole('button', { name:'Edit Guangzhou', exact:true }).click()
+  await page.getByRole('button', { name:'Edit Harbor City', exact:true }).click()
   await page.getByLabel('Hotel / accommodation').fill('Riverside stay')
   await page.getByRole('button', { name:'Save changes' }).click()
   await expect(page.getByText('Riverside stay', { exact:true })).toBeVisible()
@@ -99,7 +99,7 @@ test('drag activity to another day', async ({page}, testInfo) => {
   test.skip(testInfo.project.name === 'mobile', 'Desktop mouse drag; touch drag has a separate check')
   await importSample(page)
   await page.getByRole('button',{name:'Daily itinerary',exact:true}).click()
-  const source=page.getByRole('button',{name:'Drag Fly London Heathrow → Wuhan (CZ608)',exact:true})
+  const source=page.getByRole('button',{name:'Drag Train to Harbor City',exact:true})
   const target=page.locator('[data-date-drop="2026-11-12"]')
   await source.scrollIntoViewIfNeeded()
   const a=await source.boundingBox(), b=await target.boundingBox()
@@ -107,14 +107,14 @@ test('drag activity to another day', async ({page}, testInfo) => {
   await page.mouse.down()
   await page.mouse.move(b.x+b.width-20,b.y+35,{steps:10})
   await page.mouse.up()
-  await expect(target.getByRole('button',{name:/Fly London Heathrow/})).toHaveCount(2)
+  await expect(target.getByRole('button',{name:/Train to Harbor City/})).toHaveCount(2)
 })
 
 test('touch drag moves an activity on mobile', async ({page}, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Touch viewport only')
   await importSample(page)
   await page.getByRole('button',{name:'Daily itinerary',exact:true}).click()
-  const source=page.getByRole('button',{name:'Drag Fly London Heathrow → Wuhan (CZ608)',exact:true})
+  const source=page.getByRole('button',{name:'Drag Train to Harbor City',exact:true})
   await source.scrollIntoViewIfNeeded()
   const target=page.locator('[data-date-drop="2026-11-12"]')
   const a=await source.boundingBox(), b=await target.boundingBox()
@@ -123,7 +123,7 @@ test('touch drag moves an activity on mobile', async ({page}, testInfo) => {
   await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]})
   for(let step=1;step<=10;step++) await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+(tx-x)*step/10,y:y+(ty-y)*step/10}]})
   await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
-  await expect(target.getByRole('button',{name:/Fly London Heathrow/})).toHaveCount(2)
+  await expect(target.getByRole('button',{name:/Train to Harbor City/})).toHaveCount(2)
 })
 test('built app opens offline and retains the trip', async ({page,context}) => {
   await importSample(page)
@@ -140,7 +140,7 @@ test('static build works from a private-site subfolder', async ({page}) => {
   await page.goto('/roam/')
   await expect(page.getByRole('heading',{name:'My next adventure',exact:true})).toBeVisible()
   await page.getByRole('button',{name:'Trip notes',exact:true}).click()
-  await page.getByRole('button',{name:'Load China sample',exact:true}).click()
+  await importSample(page)
   await expect(page.getByRole('heading',{name:sample.name,exact:true})).toBeVisible()
   await fits(page)
   await page.evaluate(async () => {
@@ -148,4 +148,10 @@ test('static build works from a private-site subfolder', async ({page}) => {
     if (!navigator.serviceWorker.controller) await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}))
   })
   expect(await page.evaluate(() => navigator.serviceWorker.controller.scriptURL)).toContain('/roam/sw.js')
+})
+test('personal plans are excluded from the published app', async ({page,request}) => {
+  await expect(page.getByRole('button',{name:'Load China sample',exact:true})).toHaveCount(0)
+  for (const path of ['/local-plans/china-2026.json','/examples/china-2026.json','/public/examples/china-2026.json']) {
+    expect((await request.get(path)).status()).toBe(404)
+  }
 })

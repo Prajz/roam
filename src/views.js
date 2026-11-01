@@ -62,7 +62,7 @@ export function overview(state) {
     <div class="field"><label for="trip-checklist">Packing, bookings & reminders</label><textarea id="trip-checklist" data-save="checklist" rows="7" placeholder="Passports, tickets, hotels, things to pack…">${esc(state.plan.checklist)}</textarea></div>
     <p class="tiny-help">Saved automatically in this browser. Download JSON backups to keep a copy.</p></section>
     <aside class="side-panel"><h3>Take your plan anywhere</h3><p>Send a JSON file to your friend, then import their updated file when they send it back. Each file is a snapshot; changes don’t sync automatically.</p>
-    <div class="file-actions">${button('export','Download JSON backup','download')}${button('import','Import JSON','upload')}${button('ics','Export calendar .ics','calendar')}${button('load-example','Load China sample','map')}${button('new-trip','Start a fresh trip','plus','btn ghost')}</div></aside></div>`
+    <div class="file-actions">${button('export','Download JSON backup','download')}${button('import','Import JSON','upload')}${button('ics','Export calendar .ics','calendar')}${button('new-trip','Start a fresh trip','plus','btn ghost')}</div></aside></div>`
 }
 export function dayDetails(state) {
   const date=state.drawerDate, day=state.getDay(date)

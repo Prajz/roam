@@ -7,3 +7,8 @@ roam-static.zip
 .env
 .env.*
 !.env.example
+
+# Personal plans: local only, never bundled or committed.
+/local-plans/
+/examples/china-2026.json
+/public/examples/china-2026.json

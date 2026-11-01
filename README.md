@@ -12,7 +12,7 @@ bun install
 bun run dev
 ```
 
-Open the local URL printed by Vite. Start with a blank week, change **Trip settings**, then add destinations and activities. The optional China itinerary is under **Trip notes → Load China sample**.
+Open the local URL printed by Vite. Start with a blank week, change **Trip settings**, then add destinations and activities. Import a personal JSON file from **Trip notes → Import JSON**.
 
 ## Upload to your own private site
 
@@ -28,7 +28,7 @@ To check the production build locally:
 bun run preview
 ```
 
-The website's access protection comes from your existing private host. Trip data stays in the browser; uploading the app does not upload your saved trip. The bundled China sample **is** in the uploaded files: omit `dist/examples/` if you don't want it hosted (the sample button will then report that it is unavailable).
+The website's access protection comes from your existing private host. Trip data stays in the browser; uploading the app does not upload your saved trip. Personal JSON files belong in `local-plans/`, which Git ignores and Vite does not copy into the production build. Import them manually in the app. Keep personal files out of `public/`, which Vite copies into `dist/`.
 
 Upload the whole new `dist/` each time, including `sw.js`. On HTTPS the built app caches its files for offline use after the first visit. Refresh after an update to receive the latest app. The new worker also retires the old vanilla app's cache. The development server does not install an offline worker.
 
@@ -58,7 +58,7 @@ The date range is limited to a year. Stay check-out is exclusive: Nov 12–15 is
 
 ## JSON format
 
-The schema remains version 1. [examples/china-2026.json](examples/china-2026.json) is a complete example.
+The schema remains version 1. [tests/fixtures/example-trip.json](tests/fixtures/example-trip.json) is a synthetic example used by the test suite. No personal itinerary is bundled.
 
 ```json
 {
@@ -72,14 +72,14 @@ The schema remains version 1. [examples/china-2026.json](examples/china-2026.jso
   "stays": [
     {
       "id": "stay-1",
-      "name": "Guangzhou",
+      "name": "Harbor City",
       "from": "2026-11-12",
       "to": "2026-11-15",
       "color": "#ec7658",
       "hotel": "",
-      "area": "Tianhe",
+      "area": "Waterfront",
       "notes": "",
-      "ideas": "Canton Tower, Pearl River"
+      "ideas": "Museum, public gardens"
     }
   ],
   "days": {
@@ -89,9 +89,9 @@ The schema remains version 1. [examples/china-2026.json](examples/china-2026.jso
       "activities": [
         {
           "id": "activity-1",
-          "title": "Arrive Guangzhou",
+          "title": "Arrive at the coast",
           "time": "16:00",
-          "location": "Baiyun Airport",
+          "location": "Coastal Station",
           "category": "transport",
           "notes": "",
           "url": "",

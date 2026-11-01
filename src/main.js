@@ -71,7 +71,6 @@ document.addEventListener('click',event=>{
     case 'share': state.sharePlan();return
     case 'ics': state.exportICS();return
     case 'import': fileInput.click();return
-    case 'load-example': state.loadExample();return
     case 'new-trip': state.newTrip();return
     default: return
   }

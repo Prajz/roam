@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "name": "Example coastal trip",
+  "subtitle": "Synthetic data for automated checks",
+  "startDate": "2026-11-11",
+  "endDate": "2026-12-03",
+  "overview": "Explore two imaginary destinations.",
+  "checklist": "Bring a camera",
+  "stays": [
+    {
+      "id": "stay-1",
+      "name": "Harbor City",
+      "from": "2026-11-12",
+      "to": "2026-11-15",
+      "color": "#ec7658",
+      "hotel": "",
+      "area": "Waterfront",
+      "notes": "Example only",
+      "ideas": "Museum, public gardens"
+    },
+    {
+      "id": "stay-2",
+      "name": "Old Town",
+      "from": "2026-11-15",
+      "to": "2026-12-03",
+      "color": "#7c9fe7",
+      "hotel": "",
+      "area": "Centre",
+      "notes": "Example only",
+      "ideas": "Market, walking trail"
+    }
+  ],
+  "days": {
+    "2026-11-11": {
+      "overview": "Departure day",
+      "notes": "",
+      "activities": [
+        {
+          "id": "activity-1",
+          "title": "Train to Harbor City",
+          "time": "17:15",
+          "location": "Central Station",
+          "category": "transport",
+          "notes": "Synthetic booking",
+          "url": "",
+          "done": false
+        }
+      ]
+    },
+    "2026-11-12": {
+      "overview": "Arrival day",
+      "notes": "",
+      "activities": [
+        {
+          "id": "activity-2",
+          "title": "Arrive at the coast",
+          "time": "12:05",
+          "location": "Coastal Station",
+          "category": "transport",
+          "notes": "Example only",
+          "url": "",
+          "done": false
+        }
+      ]
+    }
+  }
+}

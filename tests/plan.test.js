@@ -2,8 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { normalise, blankPlan, validDate, addDays, dayList, safeLink } from '../src/plan.js'
-test('existing sample survives the Vite migration unchanged', () => {
-  const sample=JSON.parse(readFileSync(new URL('../examples/china-2026.json',import.meta.url)))
+test('version 1 JSON remains compatible', () => {
+  const sample=JSON.parse(readFileSync(new URL('./fixtures/example-trip.json',import.meta.url)))
   assert.deepEqual(normalise(sample),sample)
 })
 test('dates handle leap years and month boundaries without timezone conversion', () => {
