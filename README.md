@@ -47,6 +47,12 @@ Upload the whole new `dist/` each time, including `sw.js`. On HTTPS the built ap
 
 These are separate copies, not live collaboration. Import replaces the current plan after confirmation, so export a backup before switching trips. Your existing version 1 JSON files and browser storage key are preserved. Browser data is tied to the site's address and browser; clearing site data can erase it.
 
+## Edit JSON in the app
+
+Open **Trip settings → JSON editor** to edit the complete saved plan inline. Validation updates as you type, with the field causing any problem shown below the editor. **Format JSON** tidies the text and **Reset draft** restores your current saved plan. Choose **Apply JSON** to update the app and browser save, or **Cancel** to discard the draft.
+
+Invalid dates, duplicate IDs, unsupported fields and days outside the trip are rejected instead of silently dropping data. You can still import and export JSON files as before.
+
 ## Included
 
 - First-visit JSON import or guided setup for dates, places, pace, interests and optional flights

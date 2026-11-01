@@ -1,5 +1,6 @@
 import { COLORS, addDays } from './plan.js'
 import { esc, button } from './html.js'
+import { jsonEditorContent } from './json-editor.js'
 function field(name, label, value='', { type='text', extra='', textarea=false, placeholder='' }={}) {
   const id='edit-'+name
   return `<div class="field"><label for="${id}">${label}</label>${textarea?`<textarea id="${id}" name="${name}" ${extra} placeholder="${esc(placeholder)}">${esc(value)}</textarea>`:`<input id="${id}" name="${name}" type="${type}" value="${esc(value)}" ${extra} placeholder="${esc(placeholder)}">`}</div>`
@@ -33,5 +34,6 @@ export function editorContent(state) {
       +'<p class="tiny-help">Move or remove existing stays and activities before shortening your trip past them.</p>'
   }
   return `<div class="modal-head"><div><h2 id="editor-title">${heading}</h2><p>${kind==='settings'?'A name, a few dates, and somewhere to go.':kind==='activity'?'Make a plan. You can always move it later.':'Keep your dates, accommodation and ideas together.'}</p></div>${button('close-editor','','x','icon-btn','aria-label="Close editor"')}</div>
-    <form id="editor-form">${fields}<p id="editor-error" class="form-error" role="alert" hidden></p><div class="modal-actions">${draft.id?button('delete','Delete','trash','btn','type="button"'):''}<div class="spacer"></div>${button('close-editor','Cancel',null,'btn','type="button"')}<button type="submit" class="btn primary">Save changes</button></div></form>`
+    ${kind==='settings'?'<div class="settings-tabs tab-switch" aria-label="Settings view"><button type="button" class="selected" data-settings-tab="details" aria-pressed="true">Trip details</button><button type="button" data-settings-tab="json" aria-pressed="false">JSON editor</button></div>':''}
+    <form id="editor-form" ${kind==='settings'?'data-settings-panel="details"':''}>${fields}<p id="editor-error" class="form-error" role="alert" hidden></p><div class="modal-actions">${draft.id?button('delete','Delete','trash','btn','type="button"'):''}<div class="spacer"></div>${button('close-editor','Cancel',null,'btn','type="button"')}<button type="submit" class="btn primary">Save changes</button></div></form>${kind==='settings'?jsonEditorContent(plan):''}`
 }

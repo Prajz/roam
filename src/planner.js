@@ -1,4 +1,5 @@
 import { blankPlan, normalise, dayList, uid, iso, addDays, delta, validDate, niceDate, COLORS } from './plan.js'
+import { parsePlanJSON } from './plan-json.js'
 const STORE_KEY = 'roam-personal-trip-v1'
 const SETUP_KEY = 'roam-onboarding-complete-v1'
 export function createPlanner(onChange = () => {}) {
@@ -82,6 +83,12 @@ export function createPlanner(onChange = () => {}) {
     state.drawerDate = null; state.editor = null; state.view = 'calendar'
     save(); onChange('render')
   }
+  function applyJSON(source) {
+    const next=parsePlanJSON(source)
+    Object.assign(plan,next)
+    state.drawerDate=null;state.editor=null
+    save();onChange('render');toast('JSON changes applied')
+  }
   function newTrip() {
     if (!confirm('Set up a new trip? Your current plan stays until you finish. Export a backup first if you want to keep it.')) return
     state.onboarding = true; state.drawerDate = null; state.editor = null
@@ -128,5 +135,5 @@ export function createPlanner(onChange = () => {}) {
   }
 function icsEscape(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function exportICS(){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Roam Personal Planner//EN','CALSCALE:GREGORIAN'];for(const d of dayList(plan)){for(const a of plan.days[d]?.activities||[]){const stamp=d.replaceAll('-','');const time=(a.time&&/^\d{2}:\d{2}$/.test(a.time))?a.time.replace(':','')+'00':null;lines.push('BEGIN:VEVENT',`UID:${a.id.replace(/[^a-zA-Z0-9_-]/g,'')}@roam.local`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}`);if(time){const endMinutes=(+a.time.slice(0,2)*60 + +a.time.slice(3)+60)%(24*60);const end=addDays(d,(+a.time.slice(0,2)*60 + +a.time.slice(3)+60)>=1440?1:0);lines.push(`DTSTART:${stamp}T${time}`,`DTEND:${end.replaceAll('-','')}T${String(Math.floor(endMinutes/60)).padStart(2,'0')}${String(endMinutes%60).padStart(2,'0')}00`)}else lines.push(`DTSTART;VALUE=DATE:${stamp}`,`DTEND;VALUE=DATE:${addDays(d,1).replaceAll('-','')}`);lines.push(`SUMMARY:${icsEscape(a.title)}`,`DESCRIPTION:${icsEscape(a.notes)}`,`LOCATION:${icsEscape(a.location)}`,'END:VEVENT');}}lines.push('END:VCALENDAR');saveBlob(new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'}),filename('ics'));toast('Calendar file downloaded');}
-  return Object.assign(state, { save, toast, getDay, stayOn, openDay, setView, openEditor, saveEditor, deleteRecord, newTrip, finishSetup, dismissSetup, importFile, exportJSON, sharePlan, exportICS, moveActivity })
+  return Object.assign(state, { save, toast, getDay, stayOn, openDay, setView, openEditor, saveEditor, applyJSON, deleteRecord, newTrip, finishSetup, dismissSetup, importFile, exportJSON, sharePlan, exportICS, moveActivity })
 }

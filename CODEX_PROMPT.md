@@ -1,6 +1,6 @@
 # Working on Roam
 
-Read README.md, src/main.js, src/views.js, src/editor.js, src/planner.js, src/onboarding.js, src/starter.js, src/plan.js, src/style.css and tests/fixtures/example-trip.json before changing the project.
+Read README.md, src/main.js, src/views.js, src/editor.js, src/planner.js, src/json-editor.js, src/plan-json.js, src/onboarding.js, src/starter.js, src/plan.js, src/style.css and tests/fixtures/example-trip.json before changing the project.
 
 Roam is a small personal Vite + plain JavaScript trip planner for two friends, hosted as a static GitHub Pages site. Keep it simple. No backend, login, database, payments, tracking or API keys are needed.
 

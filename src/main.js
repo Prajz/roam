@@ -1,6 +1,7 @@
 import './style.css'
 import { createPlanner } from './planner.js'
 import { createOnboarding } from './onboarding.js'
+import { setupJSONEditor } from './json-editor.js'
 import { shell, dayDetails } from './views.js'
 import { editorContent } from './editor.js'
 import { setupDrag } from './drag.js'
@@ -24,6 +25,7 @@ const state=createPlanner(type=>{
   else updateStatus()
 })
 const onboarding=createOnboarding(state,render)
+const jsonEditor=setupJSONEditor(editorDialog,state)
 let renderedEditor=null
 function updateStatus() {
   document.getElementById('toast-status').innerHTML=state.toastMessage?`<div class="toast">${esc(state.toastMessage)}</div>`:''
@@ -39,6 +41,7 @@ function syncDialogs() {
   } else dayDialog.close()
   if (state.editor && renderedEditor!==state.editor) {
     editorDialog.innerHTML=editorContent(state)
+    jsonEditor.initialize()
     renderedEditor=state.editor
     if (!editorDialog.open) editorDialog.showModal()
   }
@@ -62,7 +65,7 @@ document.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]')
   if (!target) return
   const {action,date,id,view}=target.dataset
-  if (onboarding.action(action)) return
+  if (onboarding.action(action) || jsonEditor.action(action)) return
   switch (action) {
     case 'view': state.setView(view);break
     case 'open-day': state.openDay(date);break
