@@ -1,0 +1,17 @@
+{
+  "name": "roam-trip-planner",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build && node scripts/build-service-worker.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/plan.test.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "@playwright/test": "^1.56.0"
+  }
+}

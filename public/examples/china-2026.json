@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "name": "China, in the making 🇨🇳",
+  "subtitle": "Guangzhou to Shanghai · working draft with Changsha",
+  "startDate": "2026-11-11",
+  "endDate": "2026-12-03",
+  "overview": "Flights are booked. City stays and dates are provisional.\nRoute: Guangzhou → Changsha → Zhangjiajie → Chongqing → Chengdu → Xi'an → Beijing → Shanghai.\nPrioritise geography, travel times, weather, and the Chongqing drone show before confirming hotels.\nPotential extras: Macau, Shenzhen, Chenzhou, Furong Ancient Town.",
+  "checklist": "Book hotels after route is settled\nCheck train schedules and station locations\nConfirm drone show schedule and viewing locations\nCheck bungee/sky ladder availability and weather\nConfirm meal arrangements\nExport JSON backup and share with travel companion",
+  "stays": [
+    {
+      "id": "stay-1",
+      "name": "Guangzhou",
+      "from": "2026-11-12",
+      "to": "2026-11-15",
+      "color": "#ec7658",
+      "hotel": "",
+      "area": "Tianhe or Yuexiu",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Canton Tower, Pearl River, clothing markets, tech markets, Xuelei Fragrance Museum, Linglong night market, Shenzhen or Macau possible day trip"
+    },
+    {
+      "id": "stay-2",
+      "name": "Changsha",
+      "from": "2026-11-15",
+      "to": "2026-11-16",
+      "color": "#7c9fe7",
+      "hotel": "",
+      "area": "Near Wuyi Square or Huangxing Road",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Explore Changsha, food streets, possible Orange Isle"
+    },
+    {
+      "id": "stay-3",
+      "name": "Zhangjiajie",
+      "from": "2026-11-16",
+      "to": "2026-11-19",
+      "color": "#62b59b",
+      "hotel": "",
+      "area": "Wulingyuan or city centre: decide based on mountains vs Tianmen",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Avatar forest, Bailong Elevator, Tianmen Mountain, 999 steps, Grand Canyon Glass Bridge, Bungy China, Qixing Sky Ladder, 72 Wonder Tower, Furong Ancient Town"
+    },
+    {
+      "id": "stay-4",
+      "name": "Chongqing",
+      "from": "2026-11-19",
+      "to": "2026-11-23",
+      "color": "#ae8ada",
+      "hotel": "",
+      "area": "Jiefangbei, Jiaochangkou or Nanbin Road",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Drone show 20/21/22 November (verify schedule), 1949 Theatre, Hongyadong, Nanbin Road, Liziba, Fotuguan, TESTBED2, Eling Park, Wulong Karst, Raffles City Skywalk, Luo Han Temple, Kuixing Square, Great Hall, Ciqikou"
+    },
+    {
+      "id": "stay-5",
+      "name": "Chengdu",
+      "from": "2026-11-23",
+      "to": "2026-11-25",
+      "color": "#e3ae56",
+      "hotel": "",
+      "area": "Chunxi Road / Taikoo Li",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Panda Base, People’s Park tea culture, SKP Tower of Vitality, mega spa, Wuhou Memorial, optional Dujiangyan, Zhongshuge bookstore, Mount Qingcheng, Sanxingdui Museum"
+    },
+    {
+      "id": "stay-6",
+      "name": "Xi'an",
+      "from": "2026-11-25",
+      "to": "2026-11-26",
+      "color": "#5b9dbb",
+      "hotel": "",
+      "area": "Bell Tower area",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "City Wall, Bell Tower, Terracotta Warriors if feasible"
+    },
+    {
+      "id": "stay-7",
+      "name": "Beijing",
+      "from": "2026-11-26",
+      "to": "2026-11-29",
+      "color": "#d779a1",
+      "hotel": "",
+      "area": "Wangfujing or Dongsi",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "Great Wall (Mutianyu / Jinshanling), Forbidden City, traditional hutongs, CCTV HQ"
+    },
+    {
+      "id": "stay-8",
+      "name": "Shanghai",
+      "from": "2026-11-29",
+      "to": "2026-12-02",
+      "color": "#8d9c76",
+      "hotel": "",
+      "area": "Nanjing East Road / People’s Square",
+      "notes": "Provisional stay, not booked.",
+      "ideas": "The Bund, North Bund, Yu Garden, Lujiazui, Wukang Road, French Concession, Zhongshu bookstore, Long Bar, Apoli Itabakery"
+    }
+  ],
+  "days": {
+    "2026-11-11": {
+      "overview": "Flight night: depart London Heathrow.",
+      "notes": "",
+      "activities": [
+        {
+          "id": "flight-2026-11-11-0",
+          "title": "Fly London Heathrow → Wuhan (CZ608)",
+          "time": "17:15",
+          "location": "London Heathrow Terminal 4",
+          "category": "transport",
+          "notes": "Overnight flight; arrives Wuhan 12 Nov 12:05 local time",
+          "url": "",
+          "done": false
+        }
+      ]
+    },
+    "2026-11-12": {
+      "overview": "Arrive Guangzhou in late afternoon; hotel transfer and easy evening.",
+      "notes": "",
+      "activities": [
+        {
+          "id": "flight-2026-11-12-0",
+          "title": "Arrive Wuhan (CZ608)",
+          "time": "12:05",
+          "location": "Wuhan Tianhe Terminal 3",
+          "category": "transport",
+          "notes": "Connecting flight to Guangzhou",
+          "url": "",
+          "done": false
+        },
+        {
+          "id": "flight-2026-11-12-1",
+          "title": "Fly Wuhan → Guangzhou (CZ3345)",
+          "time": "14:00",
+          "location": "Wuhan Terminal 3",
+          "category": "transport",
+          "notes": "Arrive Guangzhou 16:00",
+          "url": "",
+          "done": false
+        },
+        {
+          "id": "flight-2026-11-12-2",
+          "title": "Land in Guangzhou",
+          "time": "16:00",
+          "location": "Guangzhou Baiyun Terminal 2",
+          "category": "transport",
+          "notes": "Allow time for arrivals and hotel transfer",
+          "url": "",
+          "done": false
+        }
+      ]
+    },
+    "2026-12-02": {
+      "overview": "Last day in Shanghai. Leave enough time to reach Pudong airport.",
+      "notes": "",
+      "activities": [
+        {
+          "id": "flight-2026-12-02-0",
+          "title": "Fly Shanghai Pudong → Guangzhou (CZ8212)",
+          "time": "20:25",
+          "location": "Shanghai Pudong Terminal 2",
+          "category": "transport",
+          "notes": "Arrive Guangzhou 23:10",
+          "url": "",
+          "done": false
+        }
+      ]
+    },
+    "2026-12-03": {
+      "overview": "Return to London early morning.",
+      "notes": "",
+      "activities": [
+        {
+          "id": "flight-2026-12-03-0",
+          "title": "Fly Guangzhou → London Gatwick (CZ689)",
+          "time": "01:30",
+          "location": "Guangzhou Baiyun Terminal 2",
+          "category": "transport",
+          "notes": "Arrive Gatwick South Terminal at 06:30",
+          "url": "",
+          "done": false
+        }
+      ]
+    }
+  }
+}
