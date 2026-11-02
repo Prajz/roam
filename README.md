@@ -59,7 +59,7 @@ Invalid dates, duplicate IDs, unsupported fields and days outside the trip are r
 - Starter stays split across available nights, flexible activity ideas and a booking checklist
 - Separate departure and arrival dates for overnight flights; all times stay local to the airport
 
-- Calendar and day-by-day itinerary
+- Calendar and day-by-day itinerary; city labels stay visible on flight and check-out days, with things to do shown before transport in calendar previews
 - Destination stays, check-in/out, accommodation, neighbourhoods and ideas
 - Activities with time, category, location, links, notes and completion
 - Mouse and touch drag to reorder/move activities, with edge scrolling

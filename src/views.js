@@ -1,5 +1,6 @@
 import { addDays, delta, niceDate, utc, safeLink } from './plan.js'
 import { esc, icon, button } from './html.js'
+import { calendarSummary } from './calendar-summary.js'
 const shortDate = date => esc(niceDate(date, { day:'numeric', month:'short' }))
 const dot = color => `<span class="dot" style="background:${color}"></span>`
 export function calendar(state) {
@@ -18,13 +19,14 @@ export function calendar(state) {
       ${Array.from({length:endCell-startCell},(_,i) => {
         const date=addDays(first,startCell+i-offset)
         const inside=date.slice(0,7)===month && date>=plan.startDate && date<=plan.endDate
-        const stay=state.stayOn(date), activities=plan.days[date]?.activities || []
+        const activities=plan.days[date]?.activities || []
+        const {destinations,preview,remaining}=inside?calendarSummary(plan,date):{destinations:[],preview:[],remaining:0}
         const tag=inside?'button':'div'
         return `<${tag} class="cal-cell ${inside?'':'outside'} ${state.drawerDate===date?'selected-day':''}" ${inside?`data-action="open-day" data-date="${date}" aria-label="${esc(niceDate(date,{weekday:'long',day:'numeric',month:'long',year:'numeric'}))}"`:''}>
           <span class="date-num">${utc(date).getUTCDate()}${inside && activities.length?`<em>${activities.length}</em>`:''}</span>
-          ${inside && stay?`<span class="city-pill" title="${esc(stay.name)}" style="background:${stay.color}20;color:${stay.color}">● ${esc(stay.name)}</span>`:''}
-          ${inside?activities.slice(0,2).map(a => `<span class="cal-activity">${esc(a.time)} ${esc(a.title)}</span>`).join(''):''}
-          ${inside && activities.length>2?`<span class="cal-more">+${activities.length-2} more</span>`:''}
+          ${destinations.map(place=>`<span class="city-pill" title="${esc(place.name)}${place.checkout?' · Check-out day':''}" style="background:${place.color}20;color:${place.color}">${place.checkout?'↗':'●'} ${esc(place.name)}</span>`).join('')}
+          ${preview.map(a => `<span class="cal-activity">${esc(a.time)} ${esc(a.title)}</span>`).join('')}
+          ${remaining?`<span class="cal-more">+${remaining} more</span>`:''}
         </${tag}>`
       }).join('')}
     </div></section>`
