@@ -85,7 +85,7 @@ export function createStarter(draft) {
       const arrival = date===cursor, departure = index===places.length-1 && date===lastStay && nights>0
       const day = getDay(date)
       day.overview = departure ? `Last day in ${city}. Leave time for your onward journey.` : arrival ? `Arrive in ${city} and settle in.` : `A day to explore ${city}.`
-      if (arrival && index>0) add(date,`Travel from ${places[index-1]} to ${city}`,'transport','Choose a train, bus or flight and confirm the journey time.')
+      if (arrival && index>0) add(date,`Travel from ${places[index-1]} to ${city}`,'transport','Prefer high-speed rail where practical. Check door-to-door journey time, station transfers and luggage arrangements before booking.')
       if (departure) continue
       const count = arrival ? 1 : dailyCount
       for (let item=0; item<Math.min(count,interests.length); item++) {

@@ -60,7 +60,7 @@ Invalid dates, duplicate IDs, unsupported fields and days outside the trip are r
 - Separate departure and arrival dates for overnight flights; all times stay local to the airport
 
 - Calendar and day-by-day itinerary; city labels stay visible on flight and check-out days, with things to do shown before transport in calendar previews
-- Destination stays, check-in/out, accommodation, neighbourhoods and ideas
+- Destination stays with check-in/out dates and optional arrival/departure times, accommodation, neighbourhoods and ideas
 - Activities with time, category, location, links, notes and completion
 - Mouse and touch drag to reorder/move activities, with edge scrolling
 - Change the activity's date in its editor as an alternative to dragging
@@ -70,9 +70,11 @@ Invalid dates, duplicate IDs, unsupported fields and days outside the trip are r
 - Responsive desktop layout and phone navigation; keyboard-accessible dialogs
 - Static hosting under a subfolder, plus offline support for production builds
 
-The date range is limited to a year. Stay check-out is exclusive: Nov 12–15 is three nights. All itinerary dates and times are local to the destination. Calendar export uses floating local times; untimed activities become all-day events and timed activities use a one-hour duration. Shortening trip dates is blocked if it would hide saved stays, activities or notes.
+The date range is limited to a year. Stay check-out is exclusive: Nov 12–15 is three nights. All itinerary dates and times are local to the destination. Optional stay fields `checkInTime` and `checkOutTime` use `HH:MM` (24-hour) or `""`. They describe planned arrival at and departure from a destination; record separate hotel/luggage rules in notes. Old version 1 files without these fields still import, defaulting to blank times. Calendar export uses floating local times; untimed activities become all-day events and timed activities use a one-hour duration. Shortening trip dates is blocked if it would hide saved stays, activities or notes.
 
 ## JSON format
+
+Use the [full AI trip-planning prompt](docs/AI_TRIP_PROMPT.md) to request rail-first recommendations and complete compatible JSON, including arrival/departure times.
 
 The schema remains version 1. [tests/fixtures/example-trip.json](tests/fixtures/example-trip.json) is a synthetic example used by the test suite. No personal itinerary is bundled.
 
@@ -91,6 +93,8 @@ The schema remains version 1. [tests/fixtures/example-trip.json](tests/fixtures/
       "name": "Harbor City",
       "from": "2026-11-12",
       "to": "2026-11-15",
+      "checkInTime": "14:00",
+      "checkOutTime": "18:00",
       "color": "#ec7658",
       "hotel": "",
       "area": "Waterfront",

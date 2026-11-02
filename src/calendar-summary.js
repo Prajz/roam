@@ -7,7 +7,7 @@ export function calendarSummary(plan,date) {
   const destinations=[]
   for (const stay of [checkingOut,overnight]) {
     if (stay && !destinations.some(place=>place.name===stay.name)) {
-      destinations.push({name:stay.name,color:stay.color,checkout:stay===checkingOut})
+      destinations.push({name:stay.name,color:stay.color,checkout:stay===checkingOut,timeLabel:stay===checkingOut?(stay.checkOutTime?'Out '+stay.checkOutTime:''):(stay.from===date && stay.checkInTime?'In '+stay.checkInTime:'')})
     }
   }
   // A flight-only day can still show its explicitly saved airport/location, without guessing a city.
@@ -20,4 +20,11 @@ export function calendarSummary(plan,date) {
   }
   const preview=[...activities.filter(activity=>activity.category!=='transport'),...activities.filter(activity=>activity.category==='transport')].slice(0,2)
   return {destinations,preview,remaining:Math.max(0,activities.length-preview.length)}
+}
+
+export function stayTransitions(plan,date) {
+  const transitions=[]
+  for (const stay of plan.stays) if (stay.to===date) transitions.push({stay,label:'Leave '+stay.name,time:stay.checkOutTime || ''})
+  for (const stay of plan.stays) if (stay.from===date) transitions.push({stay,label:'Arrive in '+stay.name,time:stay.checkInTime || ''})
+  return transitions.sort((a,b)=>(a.time || '99:99').localeCompare(b.time || '99:99'))
 }

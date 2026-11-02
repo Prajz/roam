@@ -16,7 +16,9 @@
       "hotel": "",
       "area": "Waterfront",
       "notes": "Example only",
-      "ideas": "Museum, public gardens"
+      "ideas": "Museum, public gardens",
+      "checkInTime": "",
+      "checkOutTime": ""
     },
     {
       "id": "stay-2",
@@ -27,7 +29,9 @@
       "hotel": "",
       "area": "Centre",
       "notes": "Example only",
-      "ideas": "Market, walking trail"
+      "ideas": "Market, walking trail",
+      "checkInTime": "",
+      "checkOutTime": ""
     }
   ],
   "days": {

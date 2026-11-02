@@ -1,4 +1,4 @@
-import { normalise, validDate, addDays, COLORS } from './plan.js'
+import { normalise, validDate, validTime, addDays, COLORS } from './plan.js'
 
 // Raw editing is stricter than file import: never silently drop or rewrite a draft.
 const object = (value, path) => {
@@ -43,11 +43,14 @@ export function parsePlanJSON(source) {
   for (const [index,stay] of raw.stays.entries()) {
     const path=`stays[${index}]`
     object(stay,path)
-    keys(stay,['id','name','from','to','color','hotel','area','notes','ideas'],path)
+    keys(stay,['id','name','from','to','checkInTime','checkOutTime','color','hotel','area','notes','ideas'],path)
     id(stay.id,path+'.id',stayIds)
     text(stay.name,path+'.name',{required:true})
     if (!validDate(stay.from) || !validDate(stay.to) || stay.from >= stay.to) throw new Error(`${path}: check-out must be after check-in, using YYYY-MM-DD dates.`)
-    if (stay.from < raw.startDate || stay.to > addDays(raw.endDate,1)) throw new Error(`${path}: stay dates must fit inside the trip (check-out can be the following morning).`)
+    if (stay.from < raw.startDate || stay.to > addDays(raw.endDate,1)) throw new Error(`${path}: stay dates must fit inside the trip (check-out can be the following day).`)
+    for (const key of ['checkInTime','checkOutTime']) {
+      if (stay[key] !== undefined && !validTime(stay[key])) throw new Error(`${path}.${key} must be HH:MM (24-hour), or empty.`)
+    }
     if (stay.color !== undefined && !COLORS.includes(stay.color)) throw new Error(`${path}.color must use one of Roam’s existing destination colours.`)
     for (const key of ['hotel','area','notes','ideas']) text(stay[key],path+'.'+key)
   }

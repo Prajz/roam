@@ -1,4 +1,4 @@
-import { blankPlan, normalise, dayList, uid, iso, addDays, delta, validDate, niceDate, COLORS } from './plan.js'
+import { blankPlan, normalise, dayList, uid, iso, addDays, delta, validDate, validTime, niceDate, COLORS } from './plan.js'
 import { parsePlanJSON } from './plan-json.js'
 const STORE_KEY = 'roam-personal-trip-v1'
 const SETUP_KEY = 'roam-onboarding-complete-v1'
@@ -47,7 +47,8 @@ export function createPlanner(onChange = () => {}) {
       Object.assign(plan, { name: draft.name.trim() || 'My trip', subtitle: draft.subtitle, startDate: draft.startDate, endDate: draft.endDate })
     } else if (kind === 'stay') {
       if (!draft.name.trim() || !validDate(draft.from) || !validDate(draft.to) || draft.from >= draft.to || draft.from < plan.startDate || draft.to > addDays(plan.endDate, 1)) return fail('Choose a destination and stay dates within your trip. Check-out must follow check-in.')
-      const record = { ...draft, id: draft.id || uid(), name: draft.name.trim(), color: COLORS.includes(draft.color) ? draft.color : COLORS[0] }
+      if (!validTime(draft.checkInTime ?? '') || !validTime(draft.checkOutTime ?? '')) return fail('Use local times in HH:MM (24-hour), or leave them blank.')
+      const record = { ...draft, checkInTime:draft.checkInTime ?? '', checkOutTime:draft.checkOutTime ?? '', id: draft.id || uid(), name: draft.name.trim(), color: COLORS.includes(draft.color) ? draft.color : COLORS[0] }
       const index = plan.stays.findIndex(s => s.id === draft.id)
       if (index >= 0) plan.stays[index] = record
       else plan.stays.push(record)

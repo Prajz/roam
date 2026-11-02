@@ -11,7 +11,7 @@ export function editorContent(state) {
   const draft=editor.record || (kind==='activity'
     ? {title:'',date:editor.date,time:'',category:'sightseeing',location:'',notes:'',url:'',done:false}
     : kind==='stay'
-      ? {name:'',from:plan.startDate,to:addDays(plan.startDate,1),hotel:'',area:'',ideas:'',notes:'',color:COLORS[plan.stays.length%COLORS.length]}
+      ? {name:'',from:plan.startDate,to:addDays(plan.startDate,1),checkInTime:'',checkOutTime:'',hotel:'',area:'',ideas:'',notes:'',color:COLORS[plan.stays.length%COLORS.length]}
       : {name:plan.name,subtitle:plan.subtitle,startDate:plan.startDate,endDate:plan.endDate})
   const heading=kind==='settings'?'Trip settings':kind==='activity'?(draft.id?'Edit activity':'Add an activity'):(draft.id?'Edit destination':'Add a destination')
   let fields=''
@@ -25,6 +25,8 @@ export function editorContent(state) {
   } else if (kind==='stay') {
     fields=field('name','City or destination *',draft.name,{extra:'required maxlength="150" autofocus',placeholder:'e.g. Guangzhou'})
       +pair(field('from','Check-in *',draft.from,{type:'date',extra:`required min="${plan.startDate}" max="${plan.endDate}"`}),field('to','Check-out *',draft.to,{type:'date',extra:`required min="${addDays(draft.from,1)}" max="${addDays(plan.endDate,1)}"`}))
+      +pair(field('checkInTime','Arrival / check-in time (optional)',draft.checkInTime || '',{type:'time'}),field('checkOutTime','Departure / check-out time (optional)',draft.checkOutTime || '',{type:'time'}))
+      +'<p class="tiny-help">Use the local times you plan to arrive in and leave this place. If hotel or luggage times differ, put those details in City notes.</p>'
       +pair(field('hotel','Hotel / accommodation',draft.hotel),field('area','Neighbourhood',draft.area))
       +field('ideas','Things to see (commas or one per line)',draft.ideas,{textarea:true})+field('notes','City notes',draft.notes,{textarea:true})
       +`<fieldset class="color-field"><legend>Colour</legend>${COLORS.map((color,i)=>`<label><input type="radio" name="color" value="${color}" aria-label="Colour ${i+1}" ${color===draft.color?'checked':''}><span style="background:${color}"></span></label>`).join('')}</fieldset>`
