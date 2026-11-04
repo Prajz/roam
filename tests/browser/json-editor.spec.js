@@ -19,7 +19,7 @@ test('edit JSON inline, format, apply and persist the complete plan',async({page
   const draft=structuredClone(sample)
   draft.name='Our edited trip'
   draft.days['2026-11-12'].notes='Bring a camera'
-  draft.days['2026-11-12'].activities.push({id:'json-activity',title:'Walk by the river',time:'18:00',location:'Waterfront',category:'sightseeing',notes:'Flexible evening plan',url:'',done:false})
+  draft.days['2026-11-12'].activities.push({id:'json-activity',title:'Walk by the river',time:'18:00',location:'Waterfront',category:'sightseeing',notes:'Flexible evening plan',url:'',done:false,price:'',currency:'',booked:false,paid:false})
   await source.fill(JSON.stringify(draft))
   await expect(page.locator('#json-validation')).toContainText('Valid JSON')
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('roam-personal-trip-v1')).name)).toBe(sample.name)

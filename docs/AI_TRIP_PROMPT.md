@@ -34,7 +34,11 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
       "hotel": "",
       "area": "",
       "notes": "Planned destination arrival/departure. Record actual hotel rules separately.",
-      "ideas": "Old town\nLocal market"
+      "ideas": "Old town\nLocal market",
+      "price": "",
+      "currency": "",
+      "booked": false,
+      "paid": false
     },
     {
       "id": "stay-2",
@@ -47,7 +51,11 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
       "hotel": "",
       "area": "",
       "notes": "18:00 is the planned departure from this destination, not a confirmed late hotel checkout.",
-      "ideas": "Museum\nWaterfront walk"
+      "ideas": "Museum\nWaterfront walk",
+      "price": "",
+      "currency": "",
+      "booked": false,
+      "paid": false
     }
   ],
   "days": {
@@ -63,7 +71,11 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
           "category": "transport",
           "notes": "Planning estimate, not a confirmed service. Allow time after leaving the accommodation to reach the station and board.",
           "url": "",
-          "done": false
+          "done": false,
+          "price": "",
+          "currency": "",
+          "booked": false,
+          "paid": false
         },
         {
           "id": "transport-2",
@@ -73,7 +85,11 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
           "category": "transport",
           "notes": "Planning estimate. Allow time for station exit, local transport, luggage and check-in.",
           "url": "",
-          "done": false
+          "done": false,
+          "price": "",
+          "currency": "",
+          "booked": false,
+          "paid": false
         },
         {
           "id": "activity-1",
@@ -83,7 +99,11 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
           "category": "sightseeing",
           "notes": "Flexible suggestion after settling in; check travel distance and opening hours.",
           "url": "",
-          "done": false
+          "done": false,
+          "price": "",
+          "currency": "",
+          "booked": false,
+          "paid": false
         }
       ]
     }
@@ -92,7 +112,7 @@ STRUCTURE — the example below is fictional and its times are illustrative, not
 
 FORMAT RULES:
 - schemaVersion must remain the number 1. New checkInTime/checkOutTime fields are optional additions to version 1; old files without them still work.
-- Include all fields shown above in the updated output. Do not add any other fields at any level. Put costs, durations, booking references, logistics and sources in the relevant notes or url.
+- Include all fields shown above in the updated output. Do not add any other fields at any level. Use price and currency for the cost of each stay/activity. Put durations, booking references, deposits, price estimates, logistics and sources in the relevant notes or url.
 - Dates use YYYY-MM-DD. The trip endDate is inclusive. startDate and endDate must be no more than 366 days apart.
 - Stay from is the arrival/check-in date; to is the departure/check-out date. The to date excludes that overnight: April 10–13 is three nights, even if departure is in the evening. to must be later than from. Use activities for same-day visits rather than zero-night stays.
 - Stay dates must fit within the trip. Check-out may be at most the day after endDate.
@@ -101,6 +121,9 @@ FORMAT RULES:
 - Every stay and activity needs a unique, non-empty string id. Preserve existing IDs and create new ones only for new entries.
 - Activity time is local to its destination/station/airport: HH:MM or "". Do not convert time zones. For overnight journeys, put departure and arrival activities under their respective local dates.
 - Categories: sightseeing, food, transport, hotel, shopping, adventure, other. Trains, transfers and existing booked flights use transport. There is no separate transport or flights array.
+- Stays and activities accept price, currency, booked and paid. price is a non-negative JSON number, or "" if unknown; 0 means free. currency is an uppercase three-letter code such as GBP, CNY or EUR, or "" if unknown. A positive price requires currency. Stay price is the total for the entire hotel stay, not a nightly rate. Activity price is the total for that entry; specify per-person/group basis in notes.
+- booked and paid are separate booleans, defaulting to false when not recorded. booked means a confirmed reservation; paid means the full amount has been paid. A booking can be unpaid. Record partial deposits and outstanding balances in notes and leave paid false until fully paid. Never infer booked or paid from done or an activity merely being scheduled. Do not invent prices or payment confirmations.
+- These four booking/payment fields and the stay time fields are optional version 1 additions; old files still work.
 - done must be the boolean true or false, not a string. Keep existing completion status.
 - overview, checklist, notes and ideas are strings, not arrays. Use \n for line breaks. Unknown text should be "", not null.
 - URLs should be complete https:// links, or "". Do not invent booking or source links.

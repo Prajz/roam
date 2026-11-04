@@ -6,6 +6,11 @@ function field(name, label, value='', { type='text', extra='', textarea=false, p
   return `<div class="field"><label for="${id}">${label}</label>${textarea?`<textarea id="${id}" name="${name}" ${extra} placeholder="${esc(placeholder)}">${esc(value)}</textarea>`:`<input id="${id}" name="${name}" type="${type}" value="${esc(value)}" ${extra} placeholder="${esc(placeholder)}">`}</div>`
 }
 const pair=(a,b)=>`<div class="fields-2">${a}${b}</div>`
+function bookingFields(draft,hotel=false) {
+  return `<fieldset class="booking-fields"><legend>${hotel?'Hotel booking & payment':'Booking & payment'}</legend>`
+    +pair(field('price',hotel?'Total hotel price (optional)':'Activity price (optional)',draft.price ?? '',{type:'number',extra:'min="0" step="any" inputmode="decimal"'}),field('currency','Currency',draft.currency || '',{extra:'maxlength="3" pattern="[A-Za-z]{3}" autocapitalize="characters"',placeholder:'e.g. CNY'}))
+    +`<div class="booking-checks"><label class="check-label"><input name="booked" type="checkbox" ${draft.booked?'checked':''}> ${hotel?'Hotel booked':'Booked'}</label><label class="check-label"><input name="paid" type="checkbox" ${draft.paid?'checked':''}> ${hotel?'Hotel paid':'Paid'}</label></div><p class="tiny-help">${hotel?'Total for the whole stay, not per night.':'Total for this activity entry; specify per person or group in Notes.'} Leave price blank if unknown; use 0 for free. Mark Paid only when fully paid; record deposits and estimates in notes.</p></fieldset>`
+}
 export function editorContent(state) {
   const {editor,plan}=state, kind=editor.kind
   const draft=editor.record || (kind==='activity'
@@ -21,6 +26,7 @@ export function editorContent(state) {
       +pair(field('date','Date',draft.date,{type:'date',extra:`required min="${plan.startDate}" max="${plan.endDate}"`}),field('time','Time (optional)',draft.time,{type:'time'}))
       +pair(`<div class="field"><label for="edit-category">Category</label><select id="edit-category" name="category">${categories.map(category=>`<option value="${esc(category)}" ${category===draft.category?'selected':''}>${esc(category)}</option>`).join('')}</select></div>`,field('location','Location / address',draft.location))
       +field('notes','Notes',draft.notes,{textarea:true})+field('url','Link (optional)',draft.url,{type:'url',placeholder:'https://…'})
+      +bookingFields(draft)
       +`<label class="check-label"><input name="done" type="checkbox" ${draft.done?'checked':''}> Mark as completed</label>`
   } else if (kind==='stay') {
     fields=field('name','City or destination *',draft.name,{extra:'required maxlength="150" autofocus',placeholder:'e.g. Guangzhou'})
@@ -28,6 +34,7 @@ export function editorContent(state) {
       +pair(field('checkInTime','Arrival / check-in time (optional)',draft.checkInTime || '',{type:'time'}),field('checkOutTime','Departure / check-out time (optional)',draft.checkOutTime || '',{type:'time'}))
       +'<p class="tiny-help">Use the local times you plan to arrive in and leave this place. If hotel or luggage times differ, put those details in City notes.</p>'
       +pair(field('hotel','Hotel / accommodation',draft.hotel),field('area','Neighbourhood',draft.area))
+      +bookingFields(draft,true)
       +field('ideas','Things to see (commas or one per line)',draft.ideas,{textarea:true})+field('notes','City notes',draft.notes,{textarea:true})
       +`<fieldset class="color-field"><legend>Colour</legend>${COLORS.map((color,i)=>`<label><input type="radio" name="color" value="${color}" aria-label="Colour ${i+1}" ${color===draft.color?'checked':''}><span style="background:${color}"></span></label>`).join('')}</fieldset>`
   } else {

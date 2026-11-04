@@ -103,6 +103,10 @@ document.addEventListener('submit',event=>{
   if (event.target.id!=='editor-form') return
   event.preventDefault()
   const draft={...state.editor.record,...Object.fromEntries(new FormData(event.target))}
+  if (state.editor.kind==='activity' || state.editor.kind==='stay') {
+    draft.booked=event.target.elements.booked.checked
+    draft.paid=event.target.elements.paid.checked
+  }
   if (state.editor.kind==='activity') draft.done=event.target.elements.done.checked
   state.saveEditor(draft)
   if (state.editor) {

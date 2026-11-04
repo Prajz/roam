@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 const sample=JSON.parse(await readFile(new URL('../fixtures/example-trip.json',import.meta.url),'utf8'))
-const activity=(id,title,time,category='sightseeing')=>({id,title,time,category,location:'',notes:'',url:'',done:false})
+const activity=(id,title,time,category='sightseeing')=>({id,title,time,category,location:'',notes:'',url:'',done:false,price:'',currency:'',booked:false,paid:false})
 test('imported, newly added and edited activities display chronologically everywhere',async({page})=>{
   const plan=structuredClone(sample)
   plan.days['2026-11-12'].activities=[activity('dinner','Evening dinner','18:00','food'),activity('walk','Morning walk','08:00'),activity('idea','Untimed idea',''),activity('train','Midday train','12:00','transport')]

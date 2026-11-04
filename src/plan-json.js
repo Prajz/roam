@@ -1,3 +1,4 @@
+import { normaliseBooking } from './booking.js'
 import { normalise, validDate, validTime, addDays, COLORS } from './plan.js'
 
 // Raw editing is stricter than file import: never silently drop or rewrite a draft.
@@ -43,7 +44,8 @@ export function parsePlanJSON(source) {
   for (const [index,stay] of raw.stays.entries()) {
     const path=`stays[${index}]`
     object(stay,path)
-    keys(stay,['id','name','from','to','checkInTime','checkOutTime','color','hotel','area','notes','ideas'],path)
+    keys(stay,['id','name','from','to','checkInTime','checkOutTime','color','hotel','area','notes','ideas','price','currency','booked','paid'],path)
+    normaliseBooking(stay,path)
     id(stay.id,path+'.id',stayIds)
     text(stay.name,path+'.name',{required:true})
     if (!validDate(stay.from) || !validDate(stay.to) || stay.from >= stay.to) throw new Error(`${path}: check-out must be after check-in, using YYYY-MM-DD dates.`)
@@ -66,7 +68,8 @@ export function parsePlanJSON(source) {
     for (const [index,activity] of day.activities.entries()) {
       const item=`${path}.activities[${index}]`
       object(activity,item)
-      keys(activity,['id','title','time','location','category','notes','url','done'],item)
+      keys(activity,['id','title','time','location','category','notes','url','done','price','currency','booked','paid'],item)
+      normaliseBooking(activity,item)
       id(activity.id,item+'.id',activityIds)
       text(activity.title,item+'.title',{required:true})
       for (const key of ['time','location','category','notes','url']) text(activity[key],item+'.'+key)

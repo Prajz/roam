@@ -18,7 +18,11 @@
       "notes": "Example only",
       "ideas": "Museum, public gardens",
       "checkInTime": "",
-      "checkOutTime": ""
+      "checkOutTime": "",
+      "price": "",
+      "currency": "",
+      "booked": false,
+      "paid": false
     },
     {
       "id": "stay-2",
@@ -31,7 +35,11 @@
       "notes": "Example only",
       "ideas": "Market, walking trail",
       "checkInTime": "",
-      "checkOutTime": ""
+      "checkOutTime": "",
+      "price": "",
+      "currency": "",
+      "booked": false,
+      "paid": false
     }
   ],
   "days": {
@@ -47,7 +55,11 @@
           "category": "transport",
           "notes": "Synthetic booking",
           "url": "",
-          "done": false
+          "done": false,
+          "price": "",
+          "currency": "",
+          "booked": false,
+          "paid": false
         }
       ]
     },
@@ -63,7 +75,11 @@
           "category": "transport",
           "notes": "Example only",
           "url": "",
-          "done": false
+          "done": false,
+          "price": "",
+          "currency": "",
+          "booked": false,
+          "paid": false
         }
       ]
     }

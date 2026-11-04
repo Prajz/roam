@@ -1,7 +1,12 @@
 import { addDays, delta, niceDate, utc, safeLink } from './plan.js'
 import { esc, icon, button } from './html.js'
+import { bookingPrice } from './booking.js'
 import { activitiesByTime } from './activity-order.js'
 import { calendarSummary, stayTransitions } from './calendar-summary.js'
+function bookingDetails(record) {
+  if ((record.price==='' || record.price===undefined) && !record.currency && !record.booked && !record.paid) return ''
+  return `<span class="booking-meta"><span class="booking-price">${esc(bookingPrice(record))}</span><span class="booking-state ${record.booked?'confirmed':''}">${record.booked?'Booked':'Booking not marked'}</span><span class="booking-state ${record.paid?'confirmed':''}">${record.paid?'Paid':'Payment not marked'}</span></span>`
+}
 const shortDate = date => esc(niceDate(date, { day:'numeric', month:'short' }))
 function transitionDetails(state,date) {
   const transitions=stayTransitions(state.plan,date)
@@ -46,7 +51,7 @@ export function timeline(state) {
       ${transitionDetails(state,date)}${day?.overview?`<p class="day-summary">${esc(day.overview)}</p>`:''}
       <div class="activity-line">${activitiesByTime(day?.activities).map(activity => `<div class="activity-card" data-activity-id="${esc(activity.id)}">
         <button class="drag-handle" data-drag="${esc(activity.id)}" data-date="${date}" aria-label="Drag ${esc(activity.title)}" title="Drag to move to another day; edit the time to change its order">${icon('grip')}</button>
-        <button class="activity-open" data-action="edit-activity" data-id="${esc(activity.id)}" data-date="${date}"><span class="a-title ${activity.done?'completed':''}">${esc(activity.title)}</span>${activity.time?`<span class="a-time">${esc(activity.time)}</span>`:''}</button>
+        <button class="activity-open" data-action="edit-activity" data-id="${esc(activity.id)}" data-date="${date}"><span class="activity-main"><span class="a-title ${activity.done?'completed':''}">${esc(activity.title)}</span>${activity.time?`<span class="a-time">${esc(activity.time)}</span>`:''}</span>${bookingDetails(activity)}</button>
       </div>`).join('')}${button('add-activity','Add activity','plus','dashed-add',`data-date="${date}" aria-label="Add activity ${date}"`)}</div></div>
     </section>`
   }).join('')}<p class="tiny-help">Activities are shown by time, with untimed ideas last. Drag a handle to move an activity to another day, or edit its date and time.</p></div>`
@@ -57,6 +62,7 @@ export function destinations(state) {
     <div class="stay-title"><span>${esc(stay.name)}</span>${button('edit-stay','','edit','icon-btn',`data-id="${esc(stay.id)}" aria-label="Edit ${esc(stay.name)}"`)}</div>
     <div class="stay-meta">${shortDate(stay.from)}${stay.checkInTime?` at ${esc(stay.checkInTime)}`:''} → ${shortDate(stay.to)}${stay.checkOutTime?` at ${esc(stay.checkOutTime)}`:''} · ${delta(stay.from,stay.to)} nights</div>
     <div class="stay-details">${stay.hotel?`<strong>${esc(stay.hotel)}</strong>`:'<span>Hotel not decided yet</span>'}<br>${esc(stay.area)}${stay.notes?`<p class="preserve-lines">${esc(stay.notes)}</p>`:''}</div>
+    ${bookingDetails(stay)}
     ${stay.ideas?`<div class="ideas">${stay.ideas.split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(idea=>`<span class="idea">${esc(idea)}</span>`).join('')}</div>`:''}
     <div class="stay-actions">${button('edit-stay','Edit stay',null,'btn tiny',`data-id="${esc(stay.id)}"`)}${button('open-day','View days',null,'btn tiny ghost',`data-date="${stay.from}" ${stay.from<state.plan.startDate || stay.from>state.plan.endDate?'disabled':''}`)}</div>
   </div></article>`).join('')}</div>`:`<div class="empty-board"><div class="illustration">${icon('map')}</div><h3>Start with your first city</h3><p>Add your dates, accommodation and a few places you want to explore.</p>${button('add-stay','Add destination','plus','btn primary')}</div>`}
@@ -77,7 +83,7 @@ export function dayDetails(state) {
     <h2 id="day-title" class="drawer-date">${esc(niceDate(date,{weekday:'long',day:'numeric',month:'long'}))}</h2>
     <div class="drawer-city">${esc(calendarSummary(state.plan,date).destinations.map(place=>place.name).join(' → ') || 'No destination assigned')} · ${niceDate(date,{year:'numeric'})}</div>
     ${transitionDetails(state,date)}<div class="field"><label for="day-overview">Day overview</label><textarea id="day-overview" data-dayfield="overview" placeholder="Arrive, settle in, explore the old town…">${esc(day.overview)}</textarea></div>
-    <div class="drawer-section"><h4>Activities & stops</h4>${activitiesByTime(day.activities).map(activity=>`<div class="drawer-act"><div><strong class="${activity.done?'completed':''}">${esc(activity.title)}</strong><small>${esc(activity.time)} ${esc(activity.location || activity.category)}</small>${safeLink(activity.url)?`<small><a href="${esc(safeLink(activity.url))}" target="_blank" rel="noopener noreferrer">View saved link</a></small>`:''}</div>${button('edit-activity','','edit','icon-btn',`data-date="${date}" data-id="${esc(activity.id)}" aria-label="Edit ${esc(activity.title)}"`)}</div>`).join('')}
+    <div class="drawer-section"><h4>Activities & stops</h4>${activitiesByTime(day.activities).map(activity=>`<div class="drawer-act"><div><strong class="${activity.done?'completed':''}">${esc(activity.title)}</strong><small>${esc(activity.time)} ${esc(activity.location || activity.category)}</small>${bookingDetails(activity)}${safeLink(activity.url)?`<small><a href="${esc(safeLink(activity.url))}" target="_blank" rel="noopener noreferrer">View saved link</a></small>`:''}</div>${button('edit-activity','','edit','icon-btn',`data-date="${date}" data-id="${esc(activity.id)}" aria-label="Edit ${esc(activity.title)}"`)}</div>`).join('')}
     ${day.activities.length?'':'<p class="muted">Nothing scheduled yet. Leave room to explore.</p>'}${button('add-activity','Add activity','plus','btn primary full-width',`data-date="${date}"`)}</div>
     <div class="drawer-section"><div class="field"><label for="day-notes">Extra notes</label><textarea id="day-notes" data-dayfield="notes" placeholder="Tickets, food spots, transport, backup plans…">${esc(day.notes)}</textarea></div><p class="tiny-help">Saved automatically in this browser.</p></div>`
 }
