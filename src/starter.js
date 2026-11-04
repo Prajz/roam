@@ -1,3 +1,4 @@
+import { activitiesByTime } from './activity-order.js'
 import { blankPlan, validDate, delta, addDays, uid, COLORS, normalise, dayList } from './plan.js'
 
 export function validateBasics(draft) {
@@ -104,7 +105,7 @@ export function createStarter(draft) {
     const day = getDay(date)
     if (!day.overview) day.overview = 'Travel day. Check your connections and leave time for transfers.'
     // Known flight times come first; flexible ideas remain untimed.
-    day.activities.sort((a,b) => (a.time || '99:99').localeCompare(b.time || '99:99'))
+    day.activities=activitiesByTime(day.activities)
   }
   return normalise(plan)
 }

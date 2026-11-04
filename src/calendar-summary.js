@@ -1,6 +1,7 @@
-// Calendar previews emphasize the place and things to do; the saved itinerary order stays intact.
+import { activitiesByTime } from './activity-order.js'
+// Destinations stay prominent; activity previews follow time without rewriting saved JSON.
 export function calendarSummary(plan,date) {
-  const activities=plan.days[date]?.activities || []
+  const activities=activitiesByTime(plan.days[date]?.activities)
   const latest=stays=>[...stays].sort((a,b)=>a.from.localeCompare(b.from)).at(-1)
   const overnight=latest(plan.stays.filter(stay=>stay.from<=date && date<stay.to))
   const checkingOut=latest(plan.stays.filter(stay=>stay.to===date))
@@ -18,7 +19,7 @@ export function calendarSummary(plan,date) {
       if (destinations.length===2) break
     }
   }
-  const preview=[...activities.filter(activity=>activity.category!=='transport'),...activities.filter(activity=>activity.category==='transport')].slice(0,2)
+  const preview=activities.slice(0,2)
   return {destinations,preview,remaining:Math.max(0,activities.length-preview.length)}
 }
 

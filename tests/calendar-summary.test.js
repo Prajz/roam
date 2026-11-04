@@ -9,8 +9,8 @@ test('city labels include check-out and transfer days without counting another o
   assert.deepEqual(calendarSummary(plan,'2027-03-08').destinations,[])
   assert.equal(stays[1].to,'2027-03-07')
 })
-test('calendar previews prioritize activities over flights without changing the saved order',()=>{
-  const activities=[{id:'flight',title:'Fly home',category:'transport'},{id:'arrival',title:'Land at home',category:'transport'},{id:'walk',title:'Explore the waterfront',category:'sightseeing'},{id:'food',title:'Lunch',category:'food'}]
+test('calendar previews follow time across categories without changing the saved order',()=>{
+  const activities=[{id:'flight',title:'Fly home',time:'18:00',category:'transport'},{id:'arrival',title:'Land at home',time:'20:00',category:'transport'},{id:'walk',title:'Explore the waterfront',time:'09:00',category:'sightseeing'},{id:'food',title:'Lunch',time:'12:00',category:'food'}]
   const plan={stays,days:{'2027-03-07':{activities}}}
   const before=JSON.stringify(plan)
   const summary=calendarSummary(plan,'2027-03-07')

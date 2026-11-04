@@ -59,10 +59,11 @@ Invalid dates, duplicate IDs, unsupported fields and days outside the trip are r
 - Starter stays split across available nights, flexible activity ideas and a booking checklist
 - Separate departure and arrival dates for overnight flights; all times stay local to the airport
 
-- Calendar and day-by-day itinerary; city labels stay visible on flight and check-out days, with things to do shown before transport in calendar previews
+- Calendar and day-by-day itinerary; city labels stay visible on flight and check-out days, with activities shown chronologically in calendar previews
 - Destination stays with check-in/out dates and optional arrival/departure times, accommodation, neighbourhoods and ideas
+- Activities ordered by time in the calendar, daily itinerary and day popup; untimed ideas appear last, with the order of equal-time items preserved
 - Activities with time, category, location, links, notes and completion
-- Mouse and touch drag to reorder/move activities, with edge scrolling
+- Mouse and touch drag to move activities between days, with edge scrolling; timed activities keep their chronological display order
 - Change the activity's date in its editor as an alternative to dragging
 - Day overview and extra notes; trip-wide overview and reminders
 - Automatic local saving, storage error feedback and a backup reminder

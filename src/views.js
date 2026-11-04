@@ -1,5 +1,6 @@
 import { addDays, delta, niceDate, utc, safeLink } from './plan.js'
 import { esc, icon, button } from './html.js'
+import { activitiesByTime } from './activity-order.js'
 import { calendarSummary, stayTransitions } from './calendar-summary.js'
 const shortDate = date => esc(niceDate(date, { day:'numeric', month:'short' }))
 function transitionDetails(state,date) {
@@ -43,12 +44,12 @@ export function timeline(state) {
       <div class="timeline-date"><div class="wday">${esc(niceDate(date,{weekday:'short'}))}</div><div class="big">${utc(date).getUTCDate()}</div><div class="mon">${esc(niceDate(date,{month:'short',year:'numeric'}))}</div></div>
       <div><div class="day-row-title"><div class="city-name">${dot(stay?.color || '#cbd4de')}${esc(stay?.name || 'Unassigned day')}</div>${button('open-day','Edit day','edit','btn tiny ghost',`data-date="${date}" aria-label="Edit day ${date}"`)}</div>
       ${transitionDetails(state,date)}${day?.overview?`<p class="day-summary">${esc(day.overview)}</p>`:''}
-      <div class="activity-line">${(day?.activities || []).map(activity => `<div class="activity-card" data-activity-id="${esc(activity.id)}">
-        <button class="drag-handle" data-drag="${esc(activity.id)}" data-date="${date}" aria-label="Drag ${esc(activity.title)}" title="Drag to move or reorder, or edit to change the date">${icon('grip')}</button>
+      <div class="activity-line">${activitiesByTime(day?.activities).map(activity => `<div class="activity-card" data-activity-id="${esc(activity.id)}">
+        <button class="drag-handle" data-drag="${esc(activity.id)}" data-date="${date}" aria-label="Drag ${esc(activity.title)}" title="Drag to move to another day; edit the time to change its order">${icon('grip')}</button>
         <button class="activity-open" data-action="edit-activity" data-id="${esc(activity.id)}" data-date="${date}"><span class="a-title ${activity.done?'completed':''}">${esc(activity.title)}</span>${activity.time?`<span class="a-time">${esc(activity.time)}</span>`:''}</button>
       </div>`).join('')}${button('add-activity','Add activity','plus','dashed-add',`data-date="${date}" aria-label="Add activity ${date}"`)}</div></div>
     </section>`
-  }).join('')}<p class="tiny-help">Drag a handle to reorder or move activities. You can also edit an activity to change its date.</p></div>`
+  }).join('')}<p class="tiny-help">Activities are shown by time, with untimed ideas last. Drag a handle to move an activity to another day, or edit its date and time.</p></div>`
 }
 export function destinations(state) {
   return `<div class="two-column"><section class="workspace"><div class="workspace-head"><h2>Destinations & stays</h2>${button('add-stay','Add city','plus','btn primary')}</div>
@@ -76,7 +77,7 @@ export function dayDetails(state) {
     <h2 id="day-title" class="drawer-date">${esc(niceDate(date,{weekday:'long',day:'numeric',month:'long'}))}</h2>
     <div class="drawer-city">${esc(calendarSummary(state.plan,date).destinations.map(place=>place.name).join(' → ') || 'No destination assigned')} · ${niceDate(date,{year:'numeric'})}</div>
     ${transitionDetails(state,date)}<div class="field"><label for="day-overview">Day overview</label><textarea id="day-overview" data-dayfield="overview" placeholder="Arrive, settle in, explore the old town…">${esc(day.overview)}</textarea></div>
-    <div class="drawer-section"><h4>Activities & stops</h4>${day.activities.map(activity=>`<div class="drawer-act"><div><strong class="${activity.done?'completed':''}">${esc(activity.title)}</strong><small>${esc(activity.time)} ${esc(activity.location || activity.category)}</small>${safeLink(activity.url)?`<small><a href="${esc(safeLink(activity.url))}" target="_blank" rel="noopener noreferrer">View saved link</a></small>`:''}</div>${button('edit-activity','','edit','icon-btn',`data-date="${date}" data-id="${esc(activity.id)}" aria-label="Edit ${esc(activity.title)}"`)}</div>`).join('')}
+    <div class="drawer-section"><h4>Activities & stops</h4>${activitiesByTime(day.activities).map(activity=>`<div class="drawer-act"><div><strong class="${activity.done?'completed':''}">${esc(activity.title)}</strong><small>${esc(activity.time)} ${esc(activity.location || activity.category)}</small>${safeLink(activity.url)?`<small><a href="${esc(safeLink(activity.url))}" target="_blank" rel="noopener noreferrer">View saved link</a></small>`:''}</div>${button('edit-activity','','edit','icon-btn',`data-date="${date}" data-id="${esc(activity.id)}" aria-label="Edit ${esc(activity.title)}"`)}</div>`).join('')}
     ${day.activities.length?'':'<p class="muted">Nothing scheduled yet. Leave room to explore.</p>'}${button('add-activity','Add activity','plus','btn primary full-width',`data-date="${date}"`)}</div>
     <div class="drawer-section"><div class="field"><label for="day-notes">Extra notes</label><textarea id="day-notes" data-dayfield="notes" placeholder="Tickets, food spots, transport, backup plans…">${esc(day.notes)}</textarea></div><p class="tiny-help">Saved automatically in this browser.</p></div>`
 }
