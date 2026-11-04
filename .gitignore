@@ -12,3 +12,7 @@ roam-static.zip
 /local-plans/
 /examples/china-2026.json
 /public/examples/china-2026.json
+
+# Local PDF QA artifacts.
+/output/
+/tmp/

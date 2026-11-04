@@ -47,6 +47,12 @@ Upload the whole new `dist/` each time, including `sw.js`. On HTTPS the built ap
 
 These are separate copies, not live collaboration. Import replaces the current plan after confirmation, so export a backup before switching trips. Your existing version 1 JSON files and browser storage key are preserved. Browser data is tied to the site's address and browser; clearing site data can erase it.
 
+## PDF trip overview
+
+Choose **Export PDF** in the desktop toolbar or **Trip notes → Export PDF** on any screen. Optionally add contacts with a name and email, then choose **Preview PDF → Save as PDF**. Your browser opens its print dialog; select **Save as PDF** (or your device's PDF/share option). Turn off browser headers and footers for the cleanest copy.
+
+The A4 overview includes dates, places, stay lengths, arrival/departure times and activities in time order. Consecutive empty days in the same place are grouped. Prices, currency/payment/booking fields and free-form notes are excluded; common monetary amounts in titles/locations are removed too. Activity durations are not invented. Contacts are included only in this export and are not saved in your JSON or browser storage. All report generation happens locally, including offline after the app has loaded.
+
 ## Hotel and activity prices
 
 Edit a destination to set its **total hotel price** and currency, plus separate **Hotel booked** and **Hotel paid** checkboxes. Activities have matching price, currency, **Booked** and **Paid** controls. Activity completion is still tracked separately by `done`.

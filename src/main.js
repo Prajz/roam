@@ -1,6 +1,7 @@
 import './style.css'
 import { createPlanner } from './planner.js'
 import { createOnboarding } from './onboarding.js'
+import { setupPDFExport } from './pdf-export.js'
 import { setupJSONEditor } from './json-editor.js'
 import { shell, dayDetails } from './views.js'
 import { editorContent } from './editor.js'
@@ -26,6 +27,7 @@ const state=createPlanner(type=>{
 })
 const onboarding=createOnboarding(state,render)
 const jsonEditor=setupJSONEditor(editorDialog,state)
+const pdfExport=setupPDFExport(state)
 let renderedEditor=null
 function updateStatus() {
   document.getElementById('toast-status').innerHTML=state.toastMessage?`<div class="toast">${esc(state.toastMessage)}</div>`:''
@@ -78,6 +80,7 @@ document.addEventListener('click',event=>{
     case 'close-editor': closeEditor();return
     case 'delete': state.deleteRecord();break
     case 'export': state.exportJSON();return
+    case 'pdf': pdfExport.open();return
     case 'share': state.sharePlan();return
     case 'ics': state.exportICS();return
     case 'import': fileInput.click();return
