@@ -18,12 +18,7 @@ export function withoutPrices(value,currencies=[]) {
 }
 function stayLength(stay) {
   const nights=delta(stay.from,stay.to)
-  if (!stay.checkInTime || !stay.checkOutTime) return `${nights} night${nights===1?'':'s'}`
-  const minutes=time=>+time.slice(0,2)*60 + +time.slice(3)
-  const duration=nights*1440+minutes(stay.checkOutTime)-minutes(stay.checkInTime)
-  const days=Math.floor(duration/1440),hours=Math.floor(duration%1440/60),mins=duration%60
-  const parts=[days?`${days} day${days===1?'':'s'}`:'',hours?`${hours} hour${hours===1?'':'s'}`:'',mins?`${mins} min`:''].filter(Boolean)
-  return `${nights} night${nights===1?'':'s'} · ${parts.join(', ')} planned stay`
+  return `${nights} night${nights===1?'':'s'}`
 }
 export function pdfOverview(plan,contacts=[]) {
   const currencies=[...plan.stays,...Object.values(plan.days).flatMap(day=>day.activities)].map(record=>record.currency)

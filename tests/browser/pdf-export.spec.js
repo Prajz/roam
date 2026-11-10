@@ -29,7 +29,7 @@ test('PDF preview omits finances, supports optional contacts and uses the correc
   await expect(frame.getByText('alex@example.test',{exact:true})).toBeVisible()
   await expect(frame.getByText('+44 7700 900123',{exact:true})).toBeVisible()
   await expect(frame.getByText('sam@example.test',{exact:true})).toBeVisible()
-  await expect(frame.getByText('3 nights · 3 days, 10 hours planned stay',{exact:true})).toBeVisible()
+  await expect(frame.getByText('3 nights',{exact:true})).toBeVisible()
   const body=await frame.locator('body').innerText()
   for(const secret of ['98765.43','87654.32','CNY 80','PRIVATE_','Paid','Booked']) expect(body).not.toContain(secret)
   await expect(frame.getByText('Museum visit',{exact:true})).toBeVisible()

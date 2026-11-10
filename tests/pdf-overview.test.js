@@ -20,11 +20,11 @@ test('PDF projection excludes finances, free-form notes, booking secrets and com
   assert(!html.includes('SECRET_'))
   assert(!html.includes('CNY 80'))
 })
-test('overview includes contact names/emails, planned stay duration and every trip day without inventing activity lengths',()=>{
+test('overview includes contact names/emails, stay nights and every trip day without inventing activity lengths',()=>{
   const plan=structuredClone(sample)
   plan.stays[0].checkInTime='08:00';plan.stays[0].checkOutTime='18:00'
   const report=pdfOverview(plan,[{name:'Alex Traveller',email:'alex@example.test',phone:'+44 7700 900123'}])
-  assert.equal(report.stays[0].length,'3 nights · 3 days, 10 hours planned stay')
+  assert.equal(report.stays[0].length,'3 nights')
   assert.deepEqual(report.contacts,[{name:'Alex Traveller',email:'alex@example.test',phone:'+44 7700 900123'}])
   const represented=[]
   for(const group of report.days) for(let date=group.from;date<=group.to;date=addDays(date,1)) represented.push(date)
