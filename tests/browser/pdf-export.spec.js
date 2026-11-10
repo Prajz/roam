@@ -18,6 +18,7 @@ test('PDF preview omits finances, supports optional contacts and uses the correc
   await page.getByRole('button',{name:'Add a contact',exact:true}).click()
   await page.getByLabel('Contact 1 name',{exact:true}).fill('Alex Traveller')
   await page.getByLabel('Contact 1 email (optional)',{exact:true}).fill('alex@example.test')
+  await page.getByLabel('Contact 1 phone (optional)',{exact:true}).fill('+44 7700 900123')
   await page.getByRole('button',{name:'Add a contact',exact:true}).click()
   await page.getByLabel('Contact 2 name',{exact:true}).fill('Sam Traveller')
   await page.getByLabel('Contact 2 email (optional)',{exact:true}).fill('sam@example.test')
@@ -26,6 +27,7 @@ test('PDF preview omits finances, supports optional contacts and uses the correc
   const frame=page.frameLocator('iframe[title="Trip PDF preview"]')
   await expect(frame.getByRole('heading',{name:plan.name,exact:true})).toBeVisible()
   await expect(frame.getByText('alex@example.test',{exact:true})).toBeVisible()
+  await expect(frame.getByText('+44 7700 900123',{exact:true})).toBeVisible()
   await expect(frame.getByText('sam@example.test',{exact:true})).toBeVisible()
   await expect(frame.getByText('3 nights · 3 days, 10 hours planned stay',{exact:true})).toBeVisible()
   const body=await frame.locator('body').innerText()
@@ -45,6 +47,7 @@ test('PDF preview omits finances, supports optional contacts and uses the correc
   }
   await page.getByRole('button',{name:'Edit contacts',exact:true}).click()
   await expect(page.getByLabel('Contact 1 name',{exact:true})).toHaveValue('Alex Traveller')
+  await expect(page.getByLabel('Contact 1 phone (optional)',{exact:true})).toHaveValue('+44 7700 900123')
   await page.getByRole('button',{name:'Remove contact 2',exact:true}).click()
   await expect(page.getByLabel('Contact 2 name',{exact:true})).toHaveCount(0)
   await page.getByRole('button',{name:'Close PDF export',exact:true}).click()

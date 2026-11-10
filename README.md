@@ -49,7 +49,7 @@ These are separate copies, not live collaboration. Import replaces the current p
 
 ## PDF trip overview
 
-Choose **Export PDF** in the desktop toolbar or **Trip notes → Export PDF** on any screen. Optionally add contacts with a name and email, then choose **Preview PDF → Save as PDF**. Your browser opens its print dialog; select **Save as PDF** (or your device's PDF/share option). Turn off browser headers and footers for the cleanest copy.
+Choose **Export PDF** in the desktop toolbar or **Trip notes → Export PDF** on any screen. Optionally add contacts with a name, email and phone number, then choose **Preview PDF → Save as PDF**. Your browser opens its print dialog; select **Save as PDF** (or your device's PDF/share option). Turn off browser headers and footers for the cleanest copy.
 
 The A4 overview includes dates, places, stay lengths, arrival/departure times and activities in time order. Consecutive empty days in the same place are grouped. Prices, currency/payment/booking fields and free-form notes are excluded; common monetary amounts in titles/locations are removed too. Activity durations are not invented. Contacts are included only in this export and are not saved in your JSON or browser storage. All report generation happens locally, including offline after the app has loaded.
 

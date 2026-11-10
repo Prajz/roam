@@ -23,14 +23,15 @@ test('PDF projection excludes finances, free-form notes, booking secrets and com
 test('overview includes contact names/emails, planned stay duration and every trip day without inventing activity lengths',()=>{
   const plan=structuredClone(sample)
   plan.stays[0].checkInTime='08:00';plan.stays[0].checkOutTime='18:00'
-  const report=pdfOverview(plan,[{name:'Alex Traveller',email:'alex@example.test'}])
+  const report=pdfOverview(plan,[{name:'Alex Traveller',email:'alex@example.test',phone:'+44 7700 900123'}])
   assert.equal(report.stays[0].length,'3 nights · 3 days, 10 hours planned stay')
-  assert.deepEqual(report.contacts,[{name:'Alex Traveller',email:'alex@example.test'}])
+  assert.deepEqual(report.contacts,[{name:'Alex Traveller',email:'alex@example.test',phone:'+44 7700 900123'}])
   const represented=[]
   for(const group of report.days) for(let date=group.from;date<=group.to;date=addDays(date,1)) represented.push(date)
   assert.deepEqual(represented,dayList(plan))
   assert(report.days.length<dayList(plan).length)
   assert.equal(report.activityCount,2)
+  assert(pdfHTML(plan,report.contacts).includes('+44 7700 900123'))
   assert(!pdfHTML(plan).includes('Travel contacts'))
 })
 test('printed labels remove common currency amounts while preserving route times and escape user HTML',()=>{
