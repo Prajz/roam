@@ -1,5 +1,5 @@
 import { blankPlan, normalise, dayList, uid, iso, addDays, delta, validDate, validTime, niceDate, COLORS } from './plan.js'
-import { activitiesByTime } from './activity-order.js'
+import { tripCalendar } from './calendar-export.js'
 import { bookingFromForm } from './booking.js'
 import { parsePlanJSON } from './plan-json.js'
 const STORE_KEY = 'roam-personal-trip-v1'
@@ -145,7 +145,9 @@ export function createPlanner(onChange = () => {}) {
     save()
     toast(from === to ? 'Activities are displayed by time. Edit the time to change the order.' : 'Activity moved to ' + niceDate(to, { day:'numeric', month:'short' }))
   }
-function icsEscape(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
-function exportICS(){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Roam Personal Planner//EN','CALSCALE:GREGORIAN'];for(const d of dayList(plan)){for(const a of activitiesByTime(plan.days[d]?.activities)){const stamp=d.replaceAll('-','');const time=(a.time&&/^\d{2}:\d{2}$/.test(a.time))?a.time.replace(':','')+'00':null;lines.push('BEGIN:VEVENT',`UID:${a.id.replace(/[^a-zA-Z0-9_-]/g,'')}@roam.local`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}`);if(time){const endMinutes=(+a.time.slice(0,2)*60 + +a.time.slice(3)+60)%(24*60);const end=addDays(d,(+a.time.slice(0,2)*60 + +a.time.slice(3)+60)>=1440?1:0);lines.push(`DTSTART:${stamp}T${time}`,`DTEND:${end.replaceAll('-','')}T${String(Math.floor(endMinutes/60)).padStart(2,'0')}${String(endMinutes%60).padStart(2,'0')}00`)}else lines.push(`DTSTART;VALUE=DATE:${stamp}`,`DTEND;VALUE=DATE:${addDays(d,1).replaceAll('-','')}`);lines.push(`SUMMARY:${icsEscape(a.title)}`,`DESCRIPTION:${icsEscape(a.notes)}`,`LOCATION:${icsEscape(a.location)}`,'END:VEVENT');}}lines.push('END:VCALENDAR');saveBlob(new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'}),filename('ics'));toast('Calendar file downloaded');}
+  function exportICS() {
+    saveBlob(new Blob([tripCalendar(plan)],{type:'text/calendar;charset=utf-8'}),filename('ics'))
+    toast('Full trip calendar downloaded')
+  }
   return Object.assign(state, { save, toast, getDay, stayOn, openDay, setView, openEditor, saveEditor, applyJSON, deleteRecord, newTrip, finishSetup, dismissSetup, importJSON, importFile, exportJSON, sharePlan, exportICS, moveActivity })
 }

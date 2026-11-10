@@ -59,9 +59,14 @@ test('trip editing, moving, notes, backup roundtrip, deletion and responsive vie
   expect(exported.days['2026-11-12'].notes).toBe('Remember train tickets')
   expect(exported.days['2026-11-13'].activities.at(-1).title).toBe('Visit the river')
   const calendarDownload = page.waitForEvent('download')
-  await page.getByRole('button', { name:'Export calendar .ics' }).click()
+  await page.getByRole('button', { name:'Export full calendar .ics' }).click()
   const calendar = await readFile(await (await calendarDownload).path(),'utf8')
-  expect(calendar).toContain('DTEND:20261114T003000')
+  const unfolded = calendar.replaceAll('\r\n ', '')
+  for (const detail of ['DTEND:20261114T003000','Our shared trip','Remember train tickets',
+    'SUMMARY:Stay in Harbor City','SUMMARY:Check out · Riverside stay','SUMMARY:Visit the river']) {
+    expect(unfolded).toContain(detail)
+  }
+  expect(unfolded).not.toContain('Test city')
   await page.reload()
   await expect(page.getByRole('heading', { name:sample.name, exact:true })).toBeVisible()
   await importSample(page, exported)
